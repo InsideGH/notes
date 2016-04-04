@@ -1,0 +1,638 @@
+https://leanpub.com/understandinges6
+https://www.nczonline.net/
+https://developer.mozilla.org/en-US/docs/Web/JavaScript
+https://fivejs.codeschool.com/
+http://babeljs.io/
+https://www.codeschool.com/screencasts/es2015-with-babel
+https://www.codeschool.com/screencasts/es2015-with-babel-and-gulp#comments
+
+
+es6 = 2015
+
+
+let
+  Accessing
+    var foo; // this variable is hoisted
+    let bar; // this varibale is scoped to nearest block (java style)
+
+    accessing foo that is not set, will lead to undefined.
+    accessing bar might give Reference error.
+
+  Using in loops
+    BUG since 'i' is hoisted out from for loop and shared in all iterations.
+    for(var i in data) {
+      myfunc(data[i], function() {
+        console.log("fetched for " + data[i]);
+      });
+    }
+    Using let will CREATE a new 'i' each iteration. Note that this is not equal
+    to java, where final would have been needed in this example.
+
+  Declaration
+    Not allowed to redeclare let in same scope (type error).
+    Ok to redeclare in other scope.
+
+
+const
+  Read only
+  Cannot be reinitialized.
+  Must be assigned a value at declaration.
+  Not hoisted (but block scoped).
+  CONST MAX_USERS = 3;
+
+
+functions
+
+  function bar(userNames) {
+    // Solution works but doesn't scale for multiple args.
+    let names = typeof userNames !== 'undefined' ? userNames : [];
+    let namesLength = names.length;
+  }
+
+  // can handle bar(undefined) as well
+  function bar(userNames = []) {
+    let namesLength = userNames.length;
+  }
+
+
+  Named parameters,
+    function bar(name, {one, two three}) {
+    }
+
+    // can be invoked like so
+    bar("Peter", {
+      one: 1,
+      two: 2,
+      three: 3
+    });
+
+    // can be invoked like so
+    // two will be undefined.
+    bar("Peter", {
+      one: 1,
+      three: 3
+    });
+
+    Named parameters with default value,
+
+    function bar(name, {one, two three} = {}) {
+
+    }
+
+    bar("Peter");
+
+  variadic/rest parameters functions
+    Dynamic amount of function parameters.
+
+    Old way of doing it
+      // Function definition is unclear.
+      // Not robust when adding a parameter.
+      function display() {
+        for (let i in argumets) {
+          let tag = arguments[i];
+        }
+      }
+
+    New way (Rest parameters)
+    Similar to java ...
+    The rest params must be the last parameter
+
+    function(targetElement, ...tags) {
+      let target = _findElement(targetElement);
+
+      for (let i in tags) {
+        let tag = tags[i];
+      }
+    }
+
+  Converting an array with values to a variadic style. (***Spread operator***)
+    Use the three dot (...) in the function invocation, not definition.
+    foo(...data);
+
+  Arrow functions
+
+    Old way
+      function TagComponent(target, urlPath) {
+        this.target = target;
+        this.urlPath = urlPath;
+
+        TagComponent.prototype.render = function() {
+          getRequest(this.urlPath, function(data) {
+            // Problem here is that 'this.target' is not accessable from within the anonymous function (undefined)
+            display(this.target, ...data.tags);
+          })
+        }
+      }
+
+      New way (change "function" to "=>" and put after ())
+        function TagComponent(target, urlPath) {
+          this.target = target;
+          this.urlPath = urlPath;
+
+          TagComponent.prototype.render = function() {
+
+            // Lexical binding, binds to the scope where they are bind.
+            getRequest(this.urlPath, (data) => {
+              display(this.target, ...data.tags);
+            })
+          }
+        }
+
+
+  Object initializer shorthand for variables
+    Construction
+      Instead of
+        let user = {firstName: firstName, lastName: lastName};
+      write
+        let user = {firstName, lastName};
+    Destruction
+        grap all
+          let {first, last} = returnsAObj();
+          console.log(first);
+          console.log(last);
+        grap not all
+        let {first} = returnsAObj();
+        console.log(first);
+
+  Object initializer shorthand for functions
+    let userObj = {first, last, fullName(){return first + " " + last}};
+
+
+  String concats (including newlines)
+    Use backticks!! ````(shift)
+    let first;
+    let last;
+    let full = `${first} ${last}`;
+
+
+Object.assign
+  countdownTime(target, timeLeft, options={}) {
+    // old way, default values all over the place.
+      let container = options.container || ".time-display";
+      let timeUnit = options.timeUnit || "seconds";
+
+      // old way nrb2, default value in one place.
+      let default = {
+        container: ".time-display";
+        timeUnit: "seconds";
+      }
+
+      // jquery way
+      $.extend(target, obj1, obj2, objn);
+
+      // new way
+      let settings = Object.assign({}, obj1, obj2, objn);
+
+      // new way with side effects
+        // default mutated
+        Object.assign(default, other);
+        //
+  }
+
+Array stuff
+  Array destructing
+    let users = ["sam", "tyler", "brook"]
+    let [a,b,c] = users;
+    console.log(a,b,c);
+
+    // don't want b
+    let [a,,c] = users;
+    console.log(a,c);
+
+
+  Combining destruction with rest params
+    let users = ["a", "b", "c"];
+    let [first, ...rest] = users;
+      here rest will be a array with b and c.
+
+  For loops
+    old way (for in)
+      for (var index in array) {
+        console.log(array[index]);
+      }
+
+      new way (for of)
+        for (let name of array) {
+          console.log(name);
+        }
+
+    'For of' Does not work on objects (Type error, symbol iterator).
+    Needs a function assigned to Symbol.iterator property
+
+    let names = ['nisse', 'pelle'];
+    if (typeof names[Symbol.iterator] === "function") {
+    }
+    if (typeof names[Symbol.iterator] !== "undefined") {
+    }
+    if (!typeof names[Symbol.iterator]) {
+    }
+
+
+  Find in array
+
+  let users = [{login: "sam", admin: true}, {login: "sam", admin: true}, {login: "sam", admin: true}];
+  users.find((user) => {
+    return user.admin;
+  });
+
+
+
+
+Maps
+  Issues with using Objects as maps
+    The keys are converted to strings.
+      Example of fail
+      let user1 = {name: "sam"};
+      let user2 = {name: "tim"};
+
+      let totalReplies = {};
+      totalReplies[user1] = 5; // due to conversion to string, the key will be "object object".
+      totalReplies[user2] = 15; // same key here.
+
+    Stop using JS objects as maps!!!
+
+  Map variant
+    let user1 = {name: "sam"};
+    let user2 = {name: "tim"};
+
+    let totalReplies = new Map();
+    totalReplies,set(user1, 5);
+    totalReplies,set(user2, 15);
+
+
+Object vs Map
+  Map - when ***keys are unknown until runtime***.
+  Map - when ***all keys are same type and values are same type***.
+    example :
+      let recentPosts = new Map();
+      createPos(newPost, (data) => {
+        recentPosts.set(data.author, data.message);
+      });
+
+  Object - when keys are ***predefined***
+  Object - when ***value are not same type***
+    let settings = {
+      perPage: 15,
+      showRead: true
+    };
+
+
+  Iterating maps using for of
+
+  let map = new Map();
+
+  // array destructing here...
+  for (let [k,v] of map) {
+    console.log(`${key} = ${value}`);
+  }
+
+
+  WeakMap, only objects are allowed as keys. Similar to Java (garbage collected).
+  Does not support for of.
+
+
+Set (GOOD TO ENSURE IMMUTABILITY USING SET INSTEAD OF MUTATING THE ORIGINAL OBJECT).
+  let tags = new Set();
+  tags.add("web");
+  tags.add("web"); // ignored
+
+  // for of
+  for(let tag of tags) {
+  }
+
+  // get the first 4 tags
+  [a,b,c,d] = tags;
+
+  WeakSet, new WeakSet(), only objects can be added.
+    has extra functions
+      has(iOS), delete(iOS)
+
+    Does not support For of
+
+
+
+Classes
+
+  The old function approach
+    function SponsorWidget(name, desc, url) {
+      this.name = name;
+      this.desc = desc;
+      this.url = url;
+    }
+    SponsorWidget.prototype.render = function() {
+    };
+
+    let sponsor = new SponsorWidget("", "", "");
+    sponsor.render();
+
+  New way (class). Syntactic Sugar
+
+    class SponsorWidget {
+      constructor(name, desc, url) {
+        this.name = name;
+        this.desc = desc;
+        this.url = url;
+      }
+
+      render() {
+        console.log(this.name);
+      }
+
+      _buildLink() {
+        // There are no private/public modifiers. underscore is just a hint that it's private.
+      }
+    }
+
+  Extending
+
+    class Widget {
+      constructor() {
+      }
+      parse(value) {
+
+      }
+    }
+
+    class SponsorWidget extends Widget {
+      constructor(name, desc, url) {
+        super(); // must be called
+      }
+      parse() {
+        super.parse("bla");
+      }
+    }
+
+
+    example -------------
+                class Advertisement {
+
+              constructor(title, link){
+                this.title = title;
+                this.link = link;
+              }
+
+              _buildContent(){
+                return `<h1>${this.title}</h1>
+                  <a href="${this.link}">${this._linkText()}</a>`;
+              }
+
+              _linkText(){
+                return "Click Here";
+              }
+
+              render(){
+                return this._buildContent();
+              }
+            }
+
+            // Here's an example of how this class is used:
+            /*
+              let ad = new Advertisement("CodeSchool", "http://codeschool.com");
+              _appendToPage( targetElement, ad.render() );
+            */
+
+
+            class SidebarAdvertisement extends Advertisement {
+              constructor(title, link) {
+                super(title, link);
+              }
+
+              _linkText() {
+                return "Sign up now!";
+              }
+            }
+    ---------------------
+
+
+Modules
+  Old way
+    <script src="./flash-message.js">
+    <script src="./app.js">
+
+    All the above are placed in global space.
+
+  New way1 (default limits number of functions that we can export but allows us to set any name during import)
+    flash-message.js
+      export default function() {
+      }
+        alert("hello");
+    app.js
+      import flashMessage from './flash-message.js';
+      flashMessage();
+
+
+  New way2 (named exports, must match)
+    flash-message.js
+      export function alertMessage() {
+        alert("hello");
+      }
+      export function logMessage() {
+        console.log("hello");
+      }
+    app.js
+      import {alertMessage, logMessage} from './flash-message.js';
+      alertMessage();
+      logMessage();
+
+    New way3 (named exports, must match)
+      flash-message.js
+        export function alertMessage() {
+          alert("hello");
+        }
+        export function logMessage() {
+          console.log("hello");
+        }
+      app.js
+        import * as flash from './flash-message.js';
+        flash.alertMessage();
+        flash.loghMessage();
+
+    New way3 (less typing with exports)
+      flash-message.js
+        function alertMessage() {
+          alert("hello");
+        }
+        function logMessage() {
+          console.log("hello");
+        }
+        export {alertMessage, logMessage};
+
+      app.js
+        import * as flash from './flash-message.js';
+        flash.alertMessage();
+        flash.loghMessage();
+
+  Constant stuff
+    constants.js
+      export const MAX_USERS = 3;
+      export const MAX_REPLIES = 4;
+
+    constants.js
+      const MAX_USERS = 3;
+      const MAX_REPLIES = 4;
+      export {MAX_USERS, MAX_REPLIES};
+
+      import {MAX_USERS, MAX_REPLIES} from './constants.js';
+
+
+  Export class
+
+    Method 1
+      flash-message.js
+        export default class FlashMessage {
+          constructor(message) {
+            this.message = message;
+          }
+
+          render1() {
+
+          }
+
+          render2() {
+
+          }
+        }
+      app.js
+        import FlashMessssage from './flash-message';
+        let flash = new FlashMesssage("hello");
+        flash.render1();
+        flash.render2();
+
+
+      Method 2 (export at the end, now the export and import names MUST match)
+        flash-message.js
+          class FlashMessage {
+            constructor(message) {
+              this.message = message;
+            }
+
+            render1() {
+
+            }
+
+            render2() {
+
+            }
+          }
+          export {FlashMessage}
+
+        app.js
+          import {FlashMessage} from './flash-message';
+          let flash = new FlashMesssage("hello");
+          flash.render1();
+          flash.render2();
+
+
+  Promises (represents a future value, thus no need for a callback)
+    Old way
+      Callbacks gets nested a lot and error need to be handled at every level.
+
+    New way
+      function get() {
+        return new Promise(function(resolve, reject) {
+          //...
+          resolve(someValue); // <----- called when non-blocking code is done executing.
+          //...
+          reject(someValue); // <-----called when error happens
+        });
+      }
+
+      Promises lifecycle
+        let p = new Promise(); ---------------> Pending state
+
+        resolve(value); ----------------> fulfilled state
+        reject(value); ----------------> rejected state
+
+      Use like this
+        let fetchResultPromise = getFromServer();
+
+        function getFromServer() {
+          return new Promise(function(resolve, reject)) {
+            let request = new XMLHttpRequest();
+            request.onLoad(function() {
+              if (request.status >= 200 && request.status < 400) {
+                resolve(JSON.parse(request.response));
+              } else {
+                reject(new Error(request.status)); // execution moved immediatly to catch function, skips any then functions.
+              }
+            });
+            request.onError = function(error) {
+              reject(new Error("")); // execution moved immediatly to catch function, skips any then functions.
+            }
+            request.send();
+          });
+        }
+
+        fetchResultPromise.then(function(results) {
+          ui.render(results);
+        }).catch(function(error) {
+          console.log("");
+        });
+
+
+    Chaning then.
+      fetchResultPromise.then(function(results) {
+        results.filter((result) => {
+          return result > 1;
+        }).then(function(results) {
+          ui.render(results);
+        }).catch(function(error) {
+          console.log("");
+        });
+      });
+
+
+
+  Iterables (for of)
+    Arrays are OK.
+    Object are not.
+
+
+    Own iterable implementation. An iterator object has a method called next().
+    Each time next() is called, it returns an object with 2 specific properties.
+    Done and value.
+
+      let post = {
+        title: "a title",
+        replies: 19
+      }
+
+      post[Symbol.iterator] = function() {
+        let properties = Object.keys(this);
+        let count = 0;
+        let isDone = false;
+
+        let next = () => {
+          if (count >= properties.length) {
+            isDone = true;
+          }
+          let value = this[properties[count++]];
+          return {done: isDone, value}; // This is the next iterable object
+        }
+
+        return {next}; // same as {next: next} // This is the iterator object
+      }
+
+    Using spread opertor on a object that implements the iterable.
+      let values = [...post]; // ['a title', 19];
+    Using destructuring.
+      let [title, replies] = post;
+
+
+  Generators
+
+  Generator functions (function *) are special functions from which we can use the yield  keyword to return iterator objects.
+
+  Yield generates a next iterable object (see above).
+
+-----------
+  function *topicList(){
+    yield "ES2015";
+    yield "Semi-colons: good or bad?";
+    yield "TypeScript";
+  }
+
+  for( let topic of topicList()){
+    console.log( topic );
+  }
+----------

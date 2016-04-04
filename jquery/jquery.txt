@@ -1,0 +1,470 @@
+http://jquery.com/
+http://api.jquery.com/jQuery.ajax/
+http://api.jquery.com/
+http://learn.jquery.com/plugins/advanced-plugin-concepts/
+http://joseoncode.com/2011/09/26/a-walkthrough-jquery-deferred-and-promise/
+
+jQuery("h1") === $("h1)
+
+***** CSS Selectors
+
+Single selector
+  $("p") - element
+  $("#container") - id
+  $(".articles") - class
+
+Descendants selector
+  $("#destinations li") - selected based on parent ID and descendant/child is 'li'
+                        - will select all li in the subtree
+
+Direct children selector
+  $("#destinations > li") - select based on parent ID and direct descendant.
+
+
+Multiple selector
+  $(".promo, .france) - selects all elements with either promo or france class.
+
+Pseudo selector
+  $("#destinations li:first") - select only first. (last, odd, even, hover ...)
+
+
+***** Traversing selecting
+
+  $("#destinations").find("li") - little more code, but faster, other variants .first .last
+                                - will find ALL li in whole subtree.
+
+  $("#destinations").parent();
+  $("#destinations").children(li); - same as $("#destinations > li")
+
+
+
+Tag
+  <a></a>
+
+Tag with html attribute (goes into opening part) with value of "kalle".
+  <a href="http://www.kalle.se"></a>
+
+Target attribute
+  <.... target="_blank"   - opens in new tab (def _self)
+
+A href with no protocol or server assumes relative path.
+
+
+AJAX call: 
+
+        $.get('/block', appendToList);
+        var list = [];
+        function appendToList(blocks) {
+          for(var i in blocks) {
+//            var element = $('<li>', {text: blocks[i]});
+            var element = $('<li>').text(blocks[i]);
+            list.push(element);
+          }
+          $('.block-list').append(list);
+        }
+
+
+---------------------------------------------------------------------------
+AJAX GET (2 ways)
+
+$.ajax(url, {
+  success: function(response) {
+    $('.ticket').html(response).slideDown();
+  }
+});
+
+above is same as
+$.get(url, function(response) {
+  $('.ticket').html(response).slideDown();
+});
+---------------------------------------------------------------------------
+AJAX PARAMETERS (3 ways)
+
+$.ajax('url?confNum=132', {
+  success: function(response) {
+    $('.ticket').html(response).slideDown();
+  }
+});
+
+$.ajax('url', {
+  success: function(response) {
+    $('.ticket').html(response).slideDown();
+  },
+  data: {"confNum": 123}
+});
+
+<div class='ticket' data-confNum='123'>
+$.ajax('url', {
+  success: function(response) {
+    $('.ticket').html(response).slideDown();
+  },
+  data: {"confNum": $('.ticket').data("confNum")}
+});
+
+---------------------------------------------------------------------------
+AJAX ERROR HANDLING
+
+$.ajax(url, {
+  success: function(response) {
+    $('.ticket').html(response).slideDown();
+  },
+  error: function(request, errorType, errorMessage) {
+  },
+  timeout: 3000,
+  beforeSend: function() {
+    // Spinner
+    $('something').addClass('is-loading');
+  },
+  complete: function() {
+    // runs after success or error
+    $('something').removeClass('is-loading');
+  }
+});
+
+---------------------------------------------------------------------------
+EVENT DELEGATION
+  $('somethingThatExistDuringLoad').on('click' , 'button', function() {});
+---------------------------------------------------------------------------
+AJAX context
+
+'this' inside ajax context is refering to ajax context and not the jQuery
+content. To set the 'this' context inside a ajax call do ->
+
+var confirmation = this;
+$.ajax(url, {
+  success: function(response) {
+    $('.ticket').html(response).slideDown();
+  }, 
+  context: confirmation;
+});
+
+---------------------------------------------------------------------------
+AJAX FORMS (serialize the whole form....)
+$.ajax('/book', {
+   type: 'POST',
+   data: {"dest": $('#dest').val()}
+});
+
+$.ajax('/book', {
+   type: 'POST',
+   data: $('form').serialize();
+});
+
+---------------------------------------------------------------------------
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    $.ajax('/book', {
+      type: 'POST',
+      data: $(this).serialize()
+    });
+  });
+---------------------------------------------------------------------------
+AJAX WITH JSON
+
+$.ajax('/book', {
+   type: 'POST',
+   data: $('form').serialize(),
+   dataType: 'json', // <<<<<<<<<<<<<<<<<<<<<-------------Parse response as JSON
+   contentType: 'application/json' // <<<<<<<<<<<<<<<<<---------Ask server to respond with JSON.
+});
+
+---------------------------------------------------------------------------
+AJAX WITH JSON, grabbing the form action attribute
+
+$.ajax($('form').attr('action'), { // <<<<<<<<<<<-----------------------HERE
+   type: 'POST',
+   data: $('form').serialize(),
+   dataType: 'json', 
+   contentType: 'application/json'
+});
+---------------------------------------------------------------------------
+AJAX FORM with ACTION and METHOD ATTRIBUTES
+
+
+  <form action="/book" method="POST">
+    <p>
+      <label for="nights">Number of Nights</label>
+    </p>
+    <p>
+      <input type="number" name="nights" id="nights" value="7">
+    </p>
+    <input type="submit" value="book">
+  </form>
+
+
+
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    $.ajax($(this).attr('action'), {
+      type: $(this).attr('method'),
+      data: $('form').serialize(),
+      dataType: 'json',
+      success: function(response) {
+        $('.tour').html('<p></p>')
+                  .find('p')
+                  .append('Trip to ' + response.description)
+                  .append(' at $' + response.price)
+                  .append(' for ' + response.nights + ' nights')
+                  .append('. Confirmation: ' + response.confirmation);
+      }
+    });
+  });
+
+---------------------------------------------------------------------------
+JQUERY $.getJSON instead of $.ajax
+
+$.ajax(url, {
+   dataType: 'json', 
+   contentType: 'application/json'
+});
+
+$.getJSON(url, function success() {
+});
+
+---------------------------------------------------------------------------
+EVENT handling
+
+OFF handler
+
+$(button).off('click')
+
+---------------------------------------------------------------------------
+EVENT NAMESPACING
+
+$('button').on('click:image', function() {});
+$('button').on('click:details', function() {});
+
+// Turn off click for image namespace.
+$('button').off('click.image);
+
+// All buttons that end with image.
+$('button').off('.image);
+
+
+---------------------------------------------------------------------------
+TRIGGER events
+
+$('button').trigger('click');
+
+// only the details namespace
+$('button').trigger('click.details');
+
+---------------------------------------------------------------------------
+CUSTOM EVENTS AND TRIGGERS
+
+// 'show' is a custom event.
+$('button').on('show.image', function() {});
+
+$('button').trigger('show');
+$('button').trigger('show.image');
+
+---------------------------------------------------------------------------
+JQUERY PLUGINS 
+
+<div class="container">
+  <div data-color="red" class="block">1111</div>
+  <div data-color="green" class="block">2222</div>
+  <div data-color="blue" class="block">3333</div>
+  <div data-color="yellow" class="block">4444</div>
+</div>
+
+$(document).ready(function() {
+  $.fn.foo = function() {
+
+    // INSIDE THIS FUNCTION, 'this' is an array of objects that invoked foo().
+    // NOTE, foo is NOT invoked on each object automatically.
+    // No need to wrap this to jQueury for the sake of each method.
+    var blocks = this;
+    blocks.each(function() {
+      var block = $(this);
+      var color = block.data('color');
+      block.css('background-color', color);      
+    });
+  }
+ 
+  $('.block').foo();
+});
+
+
+---------------------------------------------------------------------------
+JQUERY PLUGINS WITH PARAMETERS
+$(document).ready(function() {
+  $.fn.foo = function(options) {
+    // No need to wrap this to jQueury for the sake of each method.
+    var blocks = this;
+    blocks.each(function() {
+      var block = $(this);
+      var color = block.data('color');
+      block.text(block.text() + options.add);
+      block.css('background-color', color);      
+    });
+  }
+ 
+  $('.block').foo({add: 1});
+});
+
+---------------------------------------------------------------------------
+JQUERY PLUGINS WITH DEFAULT PARAMETERS SUPPORT
+
+$(document).ready(function() {
+  $.fn.foo = function(options) {
+    // No need to wrap this to jQueury for the sake of each method.
+    var blocks = this;
+    var settings = $.extend({add: ":def:"}, options);
+    blocks.each(function() {
+      var block = $(this);
+      var color = block.data('color');
+      block.text(block.text() + settings.add);
+      block.css('background-color', color);      
+    });
+  }
+ 
+  $('.block').foo({add: 1});
+  $('.block').foo({add: 2});
+  $('.block').foo({});
+});
+
+
+---------------------------------------------------------------------------
+$.fn.photofy = function(options) {
+  this.each(function() {
+    var show = function(e) {
+      e.preventDefault();
+      settings.tour
+              .addClass('is-showing-photofy')
+              .find('.photos')
+              .find('li:gt('+(settings.count-1)+')')
+              .hide();
+    }
+    var settings = $.extend({
+      count: 3,
+      tour: $(this)
+    }, options);
+    settings.tour.on('click.photofy', '.see-photos', show);
+    settings.tour.on('show.photofy', show);   <<<<<<<<<<<<<<<<----------note parameter list
+    settings.tour.on('click.photofy', '.hide-tour', function(event) {
+      event.preventDefault();
+    	settings.tour.fadeOut();
+      settings.tour.off('.photofy');
+    });
+  });
+}
+
+$(document).ready(function() {
+  $('.tour').photofy({ count: 1});
+  
+  $('.show-photos').on('click', function(e) {
+    e.preventDefault();
+    $('.tour').trigger('show.photofy'); <<<<<<<<<<<<<<<---------------- trigger!
+  });
+});
+---------------------------------------------------------------------------
+Promises
+
+* All ajax methods return a object of type promise.
+* Soooooo, wrapping a ajax method inside a object that returns a promise is a good start.
+* NOTE, the wrapped ajax method is NOT implementing the success method since we want to 
+  handle the success outside the wrapped ajax method.
+* When the ajax comes back successfull, it will call the promise.done method (if it's defined).
+* To intercept the ajax done call
+  1) Create promise from scratch (instead of getting one from $.ajax(...).
+     var promise = $.Deferred()
+  2) Trigger the promise done method by calling promise.resolve() from the ajax success method.
+     Implement the ajax success and within it call promise.resolve('the (filtered/modified) data')
+* In a similar way (to nr 2 above) promise.reject(value) will trigger a call to promise.fail(function(value) {}). 
+     From the ajax error method call promise.reject which will trigger the promise.fail(function(value) {}) callback.
+
+---------------------------------------------------------------------------
+When/Then promises
+
+Collect together all promises async running.
+Call the callbacks in the order specified.
+
+$.when(promise1, promise2 ...).then(callback1, callback2 ...)
+---------------------------------------------------------------------------
+Example with Deferred, resolve and done promise
+
+var Vacation = {
+  getPrice: function(location){
+    var promise = $.Deferred();
+    $.ajax({
+      url: '/vacation/prices',
+      data: {q: location},
+      success: function(result){
+        promise.resolve(result.price);
+      },
+      error: function(request, errorType, errorMessage) {
+      	promise.reject("damn");
+      }
+    });
+    return promise;
+  }
+}
+
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var location = $('.location').text();
+    Vacation.getPrice(location).done(function(result){
+      $('.price').text(result);
+    }).fail(function(msg) {
+    	console.log(msg);
+    });
+  });
+});
+
+
+---------------------------------------------------------------------------
+When then example:
+
+Original: 
+
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var tour = $(this).parent();
+    var location = tour.data('location');
+    var resultDiv = tour.find('.results').empty();
+    Vacation.getPrice(location).done(function(priceResult){
+      $('<p>$'+priceResult+'</p>').appendTo(resultDiv);
+    });
+
+    Photo.getPhoto(location).done(function(photoResult){
+      $('<img />').attr('src', photoResult).appendTo(resultDiv);
+    });
+  });
+});
+
+Rewritten with when/then:
+
+$(document).ready(function() {
+  $('button').on('click', function(){
+    var tour = $(this).parent();
+    var location = tour.data('location');
+    var resultDiv = tour.find('.results').empty();
+    var promise1 = Vacation.getPrice(location);
+    var promise2 = Photo.getPhoto(location);
+        
+    $.when(promise1, promise2).then(function(priceResult, photoResult) {
+      $('<p>$'+priceResult+'</p>').appendTo(resultDiv);
+      $('<img />').attr('src', photoResult).appendTo(resultDiv);
+    
+    });
+  });
+});
+
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+

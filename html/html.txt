@@ -1,0 +1,193 @@
+**Box level
+  Block level - takes up the total container (the body for example).
+                means that a new tag need to start on "next line".
+                (h1, h2, p, ul, li ...)
+
+  Inline level - Does not take up total width. Floats along with the 
+                 text.
+                (a, img, input, label)
+
+  
+  css.display - change level type.
+
+
+**Box model
+  content area - the content.
+  padding - area around the content area.
+  border - just outside the padding.
+  margin - just outside the border.
+
+  width of box is : content width + padding width + border width + margin width
+
+
+**Reset all default box models provided by browsers
+  html, body, h1, h2, h3, p, ol, ul, li {
+    padding : 0;
+    margin : 0;
+    border: 0;
+  }
+
+**Reset all fonts
+  html, body ...{
+    font-size: 100%;
+    font: inherit;
+  }  
+
+**Buildup approach
+  Start from top parent
+  Add padding to body.
+  Fix next important and continue through document.
+
+
+**Order in css style sheet MATTERS. Have broadest rule first. "Cascading"
+
+  <ul class="nav"></ul>
+  <ul></ul>
+
+  CORRECT (.nav below ul), ->
+  ul {
+    padding: 20px;
+  }
+  .nav {
+    padding: 0px;
+  }
+
+**Loading a ccs sheet
+  From file
+    Use <link> (empty tag - no opening and closing version)
+    Use attributes.
+      type="text/css" (mimetype)
+      rel="stylesheet" (tell html that it should use this as a style sheet)
+      href="main.css"
+
+  From within html
+    <style type="text/css">
+      ... css here ...
+    </style>
+
+**Group content on page
+  div - block level tag.
+  
+  "fixed width layouting is great to learn with, later convert to relative"
+
+  Two ways to center in CSS. Depends on content.
+ 
+  "text-align affects the children"
+  "margin auto affects itself"  
+
+  A) to center a entire block level tag that is FIXED width within the container its in: 
+    howto :
+      .child-block-fixed-width {
+        --> margin: xx auto yy auto;
+      }
+
+  B) to center the INLINE content inside a BLOCK level tag:
+    howto : 
+
+      .parent-block {
+        text-align: center;
+      }
+
+  C) to center a entire inline level (image for example) tag within the container its in:
+    problem : text-align does not work due to inline level type.
+    howto : make block level and use margin auto approach. Basically make it a A)
+
+** Content images (and centering in particular)
+
+  One way is to make a div (that is block) (covers whole width) and set text-align: center
+  this will center all content inside. The image needs to be block as well.
+
+    <div class="dickDiv">
+        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRaSR1rwNx5rekAHnuw6vO6jEUoYqqNbpgF12d627LaX4J9traM" alt="junk">
+    </div>
+
+    .dickDiv {
+      text-align: center;
+    }
+
+  The other way is to make the image block and use margin left/right auto.
+
+    <img class="dickImg" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRaSR1rwNx5rekAHnuw6vO6jEUoYqqNbpgF12d627LaX4J9traM" alt="junk">
+
+    .dickImg {
+      display: block;
+      margin: 0 auto 0 auto;
+    }
+
+** Background images (layout images) are not added in html but in css.
+  
+   background-color: "as a fallback"
+   background-image: url(path); // no need for quotes
+   background-position: [top|center|bottom] [left|center|right];
+   background-repeat: [repeat|repeat-x|repeat-y|no-repeat];
+
+   background: color image position repeat
+
+   howto: Create a div. Use css to set a background AND fixed size === image size.
+          To center this FIXED width div is to use margin: 0 auto 0 auto
+
+   <div class="dickBackground">
+     <h1>overtext</h1>
+   </div>
+
+   .dickBackground {
+     background-color: #FF0000;
+     width: 300px;
+     height: 300px;
+     background-image: url(http://www.craftsinindia.com/newcraftsimages/medicine-buddha-statue-gold-plated.jpg);
+     background-repeat: no-repeat;
+     margin: 0 auto 0 auto;
+   }
+ 
+** How to get one or many block level tags next to a inline tag??
+   Use float property.
+   Might need to add height to force down elements.
+
+** Fonts
+   font-weight: bold;
+   font-style: italic;
+   font-size: 12px;
+   text-transformation: uppercase;
+
+   Spacing between lines, use css line-height: 22px
+
+** Forms
+
+html ->
+
+      <form>
+        <label for="band-name">Band Name</label>
+        <input type="text" id="band-name">
+        <label for="your-story">Your Story</label>
+        <textarea id="your-story"></textarea>
+        <label for="on-tour">On Tour</label>
+        <input type="checkbox" id="on-tour">
+        <input type="submit" value="Tell us about your band">
+      </form>
+
+Css ->
+
+textarea {
+  display: block;
+  margin-bottom: 15px;
+  width: 445px;
+  font-size: 20px;
+}
+label {
+  display: block;
+  font-weight: bold;
+}
+input {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+input[type=text] {
+  width: 445px;
+}
+input[type=submit] {
+  width: 165px;
+}
+input[type=checkbox], label[for=on-tour] {
+  display: inline;
+}

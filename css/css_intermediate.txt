@@ -1,0 +1,179 @@
+compond selector
+  h1#id - a h1 with id.
+
+nested selector
+  .feature p {
+  }
+
+cascading priority
+  only important if having css in multiple places
+    link
+    <head>
+    inline
+    !important
+
+  in document
+    .intro{
+      color: xxx;
+    }
+    .intro{
+      color: yyy; <--this wins
+    }
+    .intro{
+      background-color: yyy; <--this will be added/combined.
+    }
+
+  specificity (don't use important unless really must, be sparesome with id's as well....(high prio)
+
+    p {color: #a}              0001
+    .intro {color: #b}         0001
+    #header {color: #c}        0100
+    <...style="{color: #d}">   1000
+    p {color: #a !important;}  master (overriding cascade order- maintainance nightmare)
+
+
+overflow
+  overflow: visible - default (just goes outside)
+  overflow: auto (the container keeps size, to see overflow scroll using provided bars)
+  overflow: hidden (overflow can't be seen)
+  overflow: scrollbar (always scrollbar)
+
+  overflow-x and overflow-y exists as well.
+
+position
+  anything other than static is considered 'positioned' element.
+    this means that top, left, bottom, right values can be set.
+
+  static (default)
+
+  relative
+    rendered as static, but after that the values can be changed.
+
+  absolute
+    taken out from the rendering and positioned within it's parent. NOTE
+    that the parent must be 'positioned' as well meaning that it must
+    have something else than static set to position. If no parent is found
+    it will stick to the window. Use 'relative' for the parent!!
+  
+  fixed
+    Sticks to window. No need to have any parents 'positioned'
+
+z-index
+  default 0.
+  > 0 above
+  < 0 below.
+
+
+
+
+
+Code clean
+  add a sub class (cascade order!!)
+
+  .shared{
+  }
+
+  .extra1 {
+  }
+  .extra2 {
+  }
+
+  <p class="shared extra1 extra2">
+
+
+Display types
+  affects how element behave together on page
+  none
+  block (div p ul ol li h1-h6)
+    streach full width
+    linebreak before and after
+    possible to modify all box model props
+  inline (span a em img strong)
+    takes up space just for content.
+    no line break before and after. 
+  inline-block
+    behave as inline but has full box model.
+
+
+
+Dynamic html
+  Adding or removing sections
+    Use padding/margin on all sections to allow
+    for dynamic sections.
+
+  Margin colapsing
+  .header {
+    bottom-margin: 40px;
+  }    
+
+  .feature {
+    top-margin: 20px;
+  }    
+
+
+Colapsing margins
+
+  total margin = max(40, 20) = 40
+
+  if (one or more block element has 
+      padding or border.
+      relative or absolute positioning.
+      float left or right.) {
+
+      total margin = 60.
+  }
+
+Image handling
+  can only be applied to block elements (not img but li for example).
+  .comp-crop {
+    width: 100;
+    height: 100;
+    overflow: hidden;
+  }
+
+  setting the width/height on the li vs img
+  on img : the image is scaled non-propotionaly.
+  on li: 
+    if width/height is smalled than image, the image is rendered outside the li content area (default, depends on overflow prop)
+    if width/height is larger than image, the image is rendered inside the li content area, leaving empty space.
+
+  ---->
+    .store li {
+      height: 150px;
+      width: 150px;
+      overflow: hidden;
+    }
+
+  then adjust the width/height on the image in a aspect correct way --->
+  .store li img {
+    height:150px;
+    width: auto;
+  } 
+
+
+
+clickable images
+
+  <a class="logo" href="#">Sven's snowshoe emporium</a>
+
+  .logo {
+    background: url(logo.png);
+    display: block;
+    height: 75px;
+    width: 250px;
+    text-indent: -9999px;              <------------------
+  }
+
+
+Sprite images (hover images)
+
+  .logo {
+    background: url(logo2.png);
+    display: block;
+    height: 75px;
+    text-indent: -9999px;
+    width: 250px;
+  }
+  .logo:hover, .logo:focus {
+    background-position: 0 -75px;      <------------------
+  }

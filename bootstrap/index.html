@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<!--
+
+Publish site on github
+Register domain at namecheap
+
+touch CNAME
+add one line : peterlarssons.com
+git add .
+git commit
+git push origin master
+git push master:gh-pages
+
+(git config --global alias.undo-commit 'reset --soft HEAD^')
+
+Add two ip addresses in namecheap (with and without www). "A" type.
+
+google fonts
+
+960 width is nice number.
+
+Default medium 992px+, medium size screens.
+small 768px+, small size screens.
+xsmall 0px+, extra small size screens.
+
+Bootstrap comes with 200 glyphicons.
+http://getbootstrap.com/components/#glyphicons-glyphs
+
+To use bootstrap javascript plugins is to add data-* attributes
+to html elements.
+
+http://getbootstrap.com/
+http://blog.getbootstrap.com/
+https://github.com/codeschool/BlastingOffWithBootstrapDemo
+http://expo.getbootstrap.com/
+http://getbootstrap.com/components/#glyphicons
+http://getbootstrap.com/customize/
+
+-->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="main.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="main.js"></script>
+</head>
+
+<body>
+  <!-- bootstrap container centers content with left/right margin -->
+  <!-- navbar navbar-default adds a background to the navbar. The static top removes the rounded corners.-->
+  <div class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <!-- navbar-brand makes it stand out and center vertically.-->
+      <div class="navbar-header">
+        <a href="#" class="navbar-brand">Hi and welcome</a>
+        <!-- navbar-toggle makes the button to the right and squarish (.pull-left/.pull-right)-->
+        <!-- bootstrap data toggle is setting which class to toggle (collapse)-->
+        <!-- bootstrap data target is setting which element (ul) to toggle the collapse on-->
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".my-ul">
+          <span class="sr-only">Toggle navbar</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+      <!-- nav - removes bullets, navbar-nav - makes links horizontal, navbar-right makes it float right-->
+      <!-- collapse hides it completely-->
+      <!-- navbar-collapse hides it in xtra small device screens only-->
+      <ul class="nav navbar-nav navbar-right collapse navbar-collapse my-ul">
+        <li><a href="#">Links</a></li>
+        <li><a href="#">Stations</a></li>
+        <li class="open">
+          <!-- old browser will goto about.html. Newer will goto begining of page-->
+          <!-- Adding dropdown will add the '.open' class to the parent. Then the dropdown-menu
+               is checkout if it's inside something with a .open class-->
+          <a href="about.html" data-target="#" data-toggle="dropdown">About<span class="caret"></span></a>
+          <!-- dropdown-menu class will hide this ul with it's li content by default. The data-toggle class is toggling this-->
+          <ul class="dropdown-menu">
+            <li href="#">About what</li>
+            <li href="#">About that</li>
+            <li class="divider"></li>
+            <li href="#">About this</li>
+            <li href="#">About me</li>
+            <li class="divider"></li>
+            <li href="#">About you</li>
+          </ul>
+        </li>
+      </ul>
+
+
+    </div>
+  </div>
+  <!-- The well classes adds a grey background with rounded borders and padding. To stand out more. -->
+  <div class="container">
+    <div class="row well well-lg">
+      <div class="col-md-6">
+        <h2>This is a test</h2>
+        <!-- Adding class lead makes it stand out -->
+        <p class="lead">Efter stormen Helga: Nu utfärdar SMHI klass 3-varningar för extremt höga flöden. I delar av Västra Götaland är det stor risk för att vattendrag svämmar över. – Det kan leda att vägar och källare översvämmas. Det kan bli väldigt besvärligt, säger
+          Henrik Spångmyr, vakthavande hydrolog på SMHI.</p>
+        <!-- btn (grey) bt-lg (larger) btn-default (white)-->
+        <button type="button" class="btn btn-lg btn-default">Take Tour</button>
+        <!-- btn (grey) bt-lg (larger) btn-primary (blue)-->
+        <button type="button" class="btn btn-lg btn-primary">Book tickets now</button>
+      </div>
+
+      <!-- Hidden image in sm and xs sizes-->
+      <div class="col-md-6 hidden-sm hidden-xs">
+        <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Flimchinwoon.files.wordpress.com%2F2013%2F02%2Fmountain_pass.jpg&f=1" />
+      </div>
+    </div>
+  </div>
+
+  <!-- this bootstrap class covers the whole width-->
+  <div class="container-fluid">
+    <!-- Using text-center affects all children (justify, right, nowrap left)-->
+    <div class="row text-center features">
+      <!-- col-sm-offset-0 removes the offset in small mode -->
+      <div class="col-md-4 col-xs-10 col-xs-offset-1 col-sm-offset-0">
+        <!-- Adding glyphicon. First class sets size, second selects icon-->
+        <i class="glyphicon glyphicon-briefcase"></i>
+        <h3>Using bootstrap</h3>
+        <p>Men nu när stormen Helga dragit vidare är det inte länge vindarna som väntas ställa till de största problemen.</p>
+      </div>
+
+      <div class="col-md-4 col-xs-6">
+        <i class="glyphicon glyphicon-random"></i>
+        <h3>Go away</h3>
+        <p>Men nu när stormen Helga dragit vidare är det inte länge vindarna som väntas ställa till de största problemen. Efter stormen Helga: Nu utfärdar SMHI klass 3-varningar för extremt höga flöden.</p>
+      </div>
+
+      <!-- col-md-offset-1 adds one column of padding to the left side -->
+      <div class="col-md-4 col-xs-6">
+        <i class="glyphicon glyphicon-music"></i>
+        <h3>Come back</h3>
+        <p>Men nu när stormen Helga dragit vidare är det inte länge vindarna som väntas ställa till de största problemen.</p>
+      </div>
+
+      <div class="col-xs-12 redbackground visible-xs">
+        <p>This shows on xs size</p>
+      </div>
+    </div>
+  </div>
+
+  <div class='container'>
+    <div class="navbar">
+      <div class='row'>
+        <div class='col-md-10 col-md-offset-1'>
+          <h2>Plan Your Trip Today!</h2>
+          <!-- make the navbar tabs look-->
+          <ul class="nav nav-tabs">
+            <!-- select active tab-->
+            <li class="active"><a href='#time'>Today's Times</a></li>
+            <li><a href='#deals'>Hot Deals</a></li>
+            <li><a href='#forecast'>Forecast</a></li>
+          </ul>
+
+          <div class='tab-content'>
+            <div class='tab-pane fade active' id='time'>
+              <p>Today's Time here</p>
+            </div>
+            <div class='tab-pane fade' id='deals'>
+              <p>Deals here</p>
+            </div>
+            <div class='tab-pane fade' id='forecast'>
+              <p>Forecast</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class='panel-heading'>
+    <h4 class='panel-title'>
+      <!-- Using data-parent='.panel-group' , a parent instead can collapse maany at the same time-->
+      <a href='#systemsOperational' data-toggle="collapse" data-target="#systemsOperational">All Systems Operational</a>
+    </h4>
+  </div>
+  <div id='systemsOperational' class='panel-collapse collapse in'>
+    <div class='panel-body'>
+      <p>All systems are operational</p>
+      <ul class='list-unstyled'>
+        <li><i class='glyphicon glyphicon-ok'></i> Transporters</li>
+        <li><i class='glyphicon glyphicon-ok'></i> Space Elevator</li>
+        <li><i class='glyphicon glyphicon-ok'></i> RocketBus</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="ex1">
+    <button class="btn btn-default">Hide/Show</button>
+    <i class='glyphicon glyphicon-ok'></i>
+    <input placeholder="Something..."></input>
+    <p>
+    <ul class="content list-unstyled">
+      <li>
+        <img src="paris1.jpg">
+      </li>
+      <li>
+        <span> Some ex1 content </span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="row footer">
+    <div class="col-md-6">
+      <p> Options to call</p>
+      <ul class="list-unstyled">
+        <li>Number 1</li>
+        <li>Number 2</li>
+        <li>Number 3</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <p> Location <i class="glyphicon glyphicon-arrow-right"></i> </p>
+      <ul class="list-inline">
+        <li><i class="glyphicon glyphicon-phone"></i>Road 1</li>
+        <li><i class="glyphicon glyphicon-globe"></i>2345 67</li>
+        <li><i class="glyphicon glyphicon-sound-stereo"></i>Sweden</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('.nav-tabs a').click(function(e) {
+        e.preventDefault();
+        $(this).tab('show');
+      });
+    });
+  </script>
+
+</body>

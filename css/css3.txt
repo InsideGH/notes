@@ -1,0 +1,120 @@
+border-radius
+  each corner or all at the same time.
+  tl, tr, br, bl
+  px or %
+  50% on a square box -> circle
+
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+
+box-shadow (drop shadow)
+  box-shadow: [inset], offx, offy, blurradius, spreadradius, color
+  to use spreadradius, set blur radius to 0. 
+  spread radius is solid.
+  can have multiple box shadows (inset + drop)
+
+  box-shadow: inset 0 1px 0 #ce6a67;
+
+text-shadow
+  text-shadow: offx, offy, blurradius, color
+
+box-sizing
+
+  .box {
+    border: 2px solid black;
+    margin: 20px;
+    padding: 10px;
+    width: 300px;  
+  }
+
+  content is 300px -> total = 300 + 10*2 + 2*2 = 324 px;
+    
+  default css is : content+padding+border = width/height (note 
+  that margin is not included since its outside the box)
+
+  content-box: (default, width is just content)
+  padding-box: (padding included in width, makes the content smaller)
+  border-box: (padding + border included in width, but not margin, makes the content even smaller)
+
+multiple background
+  .element {
+    background-image: url(painting-01.jpg), url(painting-02.jpg);
+    background-position: top left, center center;
+    background-repeat: no-repeat, no-repeat;
+  }
+
+  .element {
+    background: 
+    url(painting-01.jpg) top left no-repeat,
+    url(painting-02.jpg) center no-repeat;
+  }
+
+color (css3 now has alpha)
+  RGBa
+  rgba(0,0,0,0.75);
+
+  HSLa
+  hsla
+
+
+opacity (affects children)
+  opacity: 0.45;
+
+gradients
+  linear-gradient
+    to top (0)
+    to bottom (180)
+    to right (270)
+    to left (90)
+
+  background: linear-gradient(#3e606f, #324d59);
+  background: linear-gradient(0deg, #3e606f, #324d59);
+
+radial-gradient
+   background: radial-gradient(circle at top left, aqua, blue);
+   background: radial-gradient(#1e3e4d, #102028);
+   background: radial-gradient(circle, 400px, #1e3e4d, #102028);
+
+
+font-face Specify online fonts
+  @font-face {
+    font-family: 'OpenSansRegular'
+    src: url('OpenSansRegular-webfont.eot');
+    font-style: normal;
+    font-weight: normal;
+  }
+  
+  h1 {
+    font-family : 'OpenSansRegular';
+  }
+   
+
+translate
+  transform: translate(x,y);
+
+rotate (clockwise)
+
+scale(x,y)
+
+skewX(angle), skewY(angle)
+
+transitions
+ 
+  .element {
+    color: red;
+    background-color: black;
+    transition: background-color 0.2s ease-in-out 0.5s
+
+    or (all properties)
+
+    transition: all 0.2s ease-in-out 0.5s
+
+  }
+
+  .element:hover {
+    background-color: red;
+  }
+
+

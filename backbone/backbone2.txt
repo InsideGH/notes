@@ -1,0 +1,126 @@
+Rest style MODELS
+
+  Fetching from server
+    var TodoItem = Backbone.Model.extend({urlRoot: '/todos'});
+    var todoItem = new TodoItem({id: 1});
+    todoItem.fetch(); -> GET /todos/1 ->
+        {id: 1, description: "....", status: "incomplete"}
+
+
+  Custom style (non standard)
+    {todo: {id: 1, description: "....", status: "incomplete"}}
+
+    Backbone default model:
+        var TodoItem = Backbone.Model.extend({
+          urlRoot: '/todos',
+          parse: function(response) {
+            return response;
+          }
+        });
+
+    Solution:
+        var TodoItem = Backbone.Model.extend({
+          urlRoot: '/todos',
+          parse: function(response) {
+            return response.todo;
+          }
+        });
+
+    Verify:
+      todoItem.attributes -> {id: 1, description: "....", status: "incomplete"}
+
+
+  Creating local models
+    Restful way
+      var todoItem = new TodoItem({id: 1, description: "....", status: "incomplete"});
+    Non standard way
+      var todoItem = new TodoItem({todo: {id: 1, description: "....", status: "incomplete"}}, {parse: true}); <---Will run the parse method!
+
+
+  Changing attribute names
+    {todo: {id: 1, desc: "....", status: "incomplete"}}
+
+    var TodoItem = Backbone.Model.extend({
+      urlRoot: '/todos',
+      parse: function(response) {
+        response = response.todo;
+        response.description = response.desc;
+        delete response.desc;
+        return response;
+      }
+    });
+
+
+  Sending back to server
+    Server expects this ->
+      {todo: {id: 1, description: "....", status: "incomplete"}}
+
+    Backbone default model:
+      var TodoItem = Backbone.Model.extend({
+        toJSON: function() {
+          return _.clone(this.attributes);
+
+          /**
+          * {id: 1, description: "...", status: "..."}
+          */
+        }
+      });
+
+    Solution:
+      var TodoItem = Backbone.Model.extend({
+        toJSON: function() {
+          return {todo: {_.clone(this.attributes)};
+          /**
+          * {todo: {id: 1, description: "...", status: "..."}}
+          */
+          // Check out underscore pick
+        }
+      });
+
+    Think about that the toJSON is changed now. In cases where
+    toJSON is used, we need to use this.model.attributes instead!!
+
+  Unconventional ID
+    Ok id is 'id'
+    Not ok id is '_id'
+
+    From server
+      {_id: 1, description: "....", status: "incomplete"}
+
+    todoItem.id -> undefined
+
+    var TodoItem = Backbone.Model.extend({
+      idAttribute: '_id'
+    });
+
+    todoItem.id -> OK
+
+
+********************************************************************************
+Customized collections
+
+  Same as for models, collection has a parse method to handle non-json
+  style objects.
+
+  Calling toJSON on a non-json style object doesn't work.
+
+  Example
+    From server
+      {
+        "total": 25, "per_page": 10, "page": 2, "todos": [{}, {}]
+      }
+
+    var TodoItems = Backbone.Collection.extend({
+      parse: function(response) {
+        this.perPage = response.per_page;
+        this.total = response.total;
+        this.page = response.page;
+        return response.todos;
+      }
+    });
+
+    todoItems.toJSON() -> [{...}, {...} ...]
+    todoItems.perPage -> 10
+
+  Fetching with extra data (query params)
+    todoItems.fetch({data: {page: 6}}) // GET /todos?page=6

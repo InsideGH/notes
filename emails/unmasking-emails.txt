@@ -1,0 +1,80 @@
+In email client there is a html preprocessor altering before rendering.
+
+Purpose is to
+  Remove/change html tags
+  Remove/change CSS
+  Override styles with app CSS
+  Change entire doc structure.
+  Remove all javascript.
+
+Gmail has the strongest aggressive preprocessor
+  removes <link>
+  override css
+  changes doc structure
+  removes style tags.
+
+
+Image urls must be absolute.
+
+Must use inline styles.
+  <img src="...stars.png"
+       style="
+              background-color: red;
+              ..."
+  </img>
+
+Must use reset code on each style(like margin: 0).
+
+To make content equal length and centered create
+a div around the the content ->
+  
+  <div style=
+            "margin: 0 auto;
+             max-width: 600px;"
+  >
+
+  ...content
+  /<div>
+
+
+Outlook mail renders using word engine. Lacks css 
+  height, display, float, position,
+but has support for (in tables)
+  width, padding
+
+Basically, all stuff is put inside a table cells.
+Each row into a table row.
+Instead of margin: 0 auto, use align: "center"
+
+
+Table stuff
+    <table border="0" cellpadding="0" cellspacing="0" width=600 align=center>
+
+Margin (outlook problem). Use padding instead.
+
+Use spans to target different font styles/sizes in same td.
+
+Two images horizontally stacked.
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+            <td style="padding-top:15px">
+                <img width="300" alt="La Amor Peligrosa" src="https://s3.amazonaws.com/unmasking-html-emails/la-amor-peligrosa.png" />
+            </td>
+            <td style="padding-top:15px">
+                <img width="300" alt="La Fuega Fatal" src="https://s3.amazonaws.com/unmasking-html-emails/la-fuega-fatal.png" />
+            </td>
+          </table>
+
+
+To create a underline : 
+  <td height="2px" style="font-size: 2px; line-height: 2px;" bgcolor="#902950"></td>
+
+
+To make a td cover full width
+  @media screen and (max-width: 600px) {
+    .stack-column {
+      display: block !important;
+      padding: 0 !important;
+      width: 100% !important;
+    }
+  }
+

@@ -1,0 +1,4 @@
+npm install express
+npm install express@4.9 (latest from 4.9 branch)
+
+express request and response are inherited from node http request and response (http.IncomingMessage)

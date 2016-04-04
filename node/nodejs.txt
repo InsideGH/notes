@@ -1,0 +1,75 @@
+https://www.codeschool.com/screencasts/soup-to-bits-real-time-web-with-node-js
+https://nodejs.org/api/
+https://www.npmjs.com/
+http://howtonode.org/
+https://github.com/substack/stream-handbook
+http://openmymind.net/2012/1/23/The-Little-Redis-Book/
+http://socket.io/docs/
+http://expressjs.com/en/4x/api.html
+http://nodeup.com/
+
+
+NODE.JS
+
+Uses V8 JavaScript Runtime, same in chrome as server side.
+NodeJS is a wrapper around v8 runtime. It's fast, written in C.
+
+Examples:
+  WebSocket server (chat server)
+  Fast File Upload client. Processes pieces on the go.
+  Ad server.
+  Any realtime data apps.
+
+What it's not:
+  Web framework (it's networking)
+  Multithreaded (it's single thread)
+
+
+Why cool?
+  It's mainly non-blocking.
+
+
+HELLO WORLD
+  var http = require('http');
+
+  http.createServer(function(request, response) {
+    response.writeHead(200);
+    response.write("Hello, this is Peter");
+    response.end();
+  }).listen(8080);
+
+
+NON-BLOCKING FILE READ:
+  var fs = require('fs');
+
+  fs.readFile('index.html', function(error, contents) {
+  	console.log(contents);
+  });
+
+
+EVENTS
+  EventEmitter
+
+STREAMS (api unstable)
+  Node version V0.10.x (streams2 api)
+  Request object
+    The request object is a read stream.
+    Also a event emitter.
+      The request object emits 'readable' and 'end' events.
+
+  The response object is a write stream.
+
+
+MODULES
+
+  --- only one
+    var hello = function() {};
+    module.exports hello;
+
+  --- multiple
+    module.exports.goodbye = function() {};
+
+  ---
+    var hello = require('./hello.js');
+    var gb = require('./hello.js');
+    gb.goodbye();

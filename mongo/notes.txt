@@ -1,0 +1,1096 @@
+https://www.codeschool.com/screencasts/soup-to-bits-the-magical-marvels-of-mongodb
+https://docs.mongodb.org/manual/ <-----------
+https://www.mongodb.org/downloads#production
+Driver : to use mongo in applications : https://docs.mongodb.org/ecosystem/drivers/
+https://mlab.com/aws/
+https://university.mongodb.com/
+
+
+mongodb
+  opensource nosql
+  document oriented
+  good for lots of unstructured data
+  comes from humongous
+
+SQL relations
+  database - database
+  table - collection
+  row - document
+  sql is relational
+  mongo is document-oriented
+
+SQL
+  Potion table
+  id  name        price vendor_id
+  1   "love"      ""    2
+  2   "strength"  ""    1
+  3   "fame"      ""    1
+
+  Vendor table
+  id  name
+  1   "brewers"
+  2   "atoms"
+
+Mongo
+  Potion collection
+  { // document
+    name: "love",
+    price: "",
+    vendor: "brewers",
+    danger: "high"   <--- note, only in this one.
+  }
+  { // document
+    name: "strength",
+    price: "",
+    vendor: "atoms"
+  }
+
+Run
+  sudo service mongod start
+  mongo
+
+Console
+  plain javascript possible
+  var potion = {
+... "name": "peter",
+... "vendor": "knuda"
+... }
+  > potion
+  { "name" : "peter", "vendor" : "knuda" }
+
+  JSON like, curly braces, field-value pairs
+
+  use reviews (created if not exist)
+  db (show which one is used)
+  show dbs
+  help
+
+Storing
+  Can't store document in db, must be in a collection.
+
+  // Insert a document into potions collection.
+  // If not exists, it will be created.
+  > db.potions.insert(
+  ... {
+  ... "name": "Invisibility",
+  ... "vendor": "Kettlecooked"
+  ... }
+  ... )
+  WriteResult({ "nInserted" : 1 })
+  > // number of doc inserted.
+
+Find
+
+  // all
+  > db.potions.find()
+  { "_id" : ObjectId("56f799bc4095889e8e3efc8d"), "name" : "Invisibility", "vendor" : "Kettlecooked" }
+  >
+  Each document requires a unique id,
+  the id was automatically created for us.
+
+Query
+
+  > db.potions.find({"name": "Love"})
+  { "_id" : ObjectId("56f79a864095889e8e3efc8f"), "name" : "Love", "vendor" : "Made" }
+
+BSON
+  Like JSON but with additional extras
+    ObjectID
+    Date
+
+Build document
+  db.wands.insert(
+    {
+      "name": "Dream Bender",
+      "creator": "Foxmond",
+      "level_required": 10,
+      "price": 34.9,
+      "powers": ["Fire", "Love"],
+      "damage": {"magic": 4, "melee": 2}
+    }
+  );
+
+  db.wands.find({"powers": "Fire"})
+
+Remove
+  Similar to "find" but with the remove method. Removes all matches.
+
+Update
+  2 parameters
+    1st : query parameter - same as in find/delete
+    2nd : operator parameter - {"$set": {"price": 3.99}}
+  Only applies to the first matching document!!
+  The result :
+    WriteResult({
+      "nMatched": 1,
+      "nUpserted": 0, //Nbr of docs created.
+      "nModified": 1
+    })
+
+  NOTE, without the $set operator, the whole document is replaced.
+  Good for replacements (not the id though). Importing and overwriting
+  data.
+
+  3rd parameters - options paramter
+  {"multi": true} - will update all matching docs.
+
+  For example, increment all by two->
+    db.wands.update(
+      {"powers": "Fire"},
+      {"$inc": {"level_required": 2}},
+      {"multi": true}
+    )
+
+Application logging
+  (like most viewed/accessed etc)
+  Put log documents in a log collection.
+  Update the "log documents" count by one.
+
+  db.logs.update(
+    {"potion": "Shrinking"},
+    {"$inc": {"count": 1}} // increment by any pos/neg number
+  )
+  If the field doesn't exist, it's created with the value.
+  If the potions log document is not found, nothing is performed!
+  Solution, use the option 'upsert'
+  db.logs.update(
+    {"potion": "Shrinking"},
+    {"$inc": {"count": 1}}, // increment by any pos/neg number
+    {"upsert": true} // if no shrinking doc is found, create one.
+  )
+  The result:
+  WriteResult({
+    "nMatched": 0,
+    "nUpserted": 1, //Nbr of docs created.
+    "nModified": 0
+  })
+
+  If we run the command again ->
+  WriteResult({
+    "nMatched": 1,
+    "nUpserted": 0, //Nbr of docs created.
+    "nModified": 1
+  })
+
+Removing fields (unset operator)
+
+  Example, find all document, unset (the empty string is just for clarity)
+  and the update to all matched documents.
+  db.potions.update(
+    {},
+    {"$unset": {"color": ""}},
+    {"multi": true}
+  )
+
+Rename field in document operator
+
+  db.potions.update(
+    {},
+    {"$rename": {"score": "grade"}},
+    {"multi": true}
+  )
+
+Update value in array in document.
+  {
+    "_id": ObjectId(...)
+    "ingredients": ["hippo", "secret", "mouse feet"]
+  }
+
+  This doesn't work ->
+    db.potions.update(
+      {"ingredients": "secret"},
+      {"$set": {"ingredients": "42"}}
+    )
+
+  This works if location is known ->
+    db.potions.update(
+      {"ingredients": "secret"},
+      {"$set": {"ingredients.1": "42"}}
+    )
+
+    This works if location is not known (using positional operator $)->
+      db.potions.update(
+        {"ingredients": "secret"},
+        {"$set": {"ingredients.$": "42"}},
+        {"multi": true}
+      )
+    Note, the above only applies to the first matched secret value in
+    the array.
+
+
+Update value embed in document using dot operation.
+    {
+    "_id": ObjectId(...)
+    "ratings": {
+                "strength": 1,
+                "color": "red"
+               }
+    }
+
+    db.potions.update(
+      {"ingredients": "secret"},
+      {"$set": {"ratings.strength": 5}},
+      {"multi": true}
+    )
+
+Other update operators
+  $min, $max, $mul
+
+Useful array operators
+
+  $pop - remove last value from array (categories).
+  db.potions.update{
+    {"name": "shrinking"},
+    {"$pop": {"categories": 1}}
+  }
+
+  $pop - remove first value from array (categories).
+  db.potions.update{
+    {"name": "shrinking"},
+    {"$pop": {"categories": -1}}
+  }
+
+  $push - push a value to the array (categories).
+  db.potions.update{
+    {"name": "shrinking"},
+    {"$push": {"categories": "something"}}
+  }
+
+  $addToSet - push only value if not existing already.
+  db.potions.update{
+    {"name": "shrinking"},
+    {"$addToSet": {"categories": "budget"}}
+  }
+
+  $pull - remove value or delete value from array.
+  db.potions.update{
+    {"name": "shrinking"},
+    {"$pull": {"categories": "budget"}}
+  }
+  Note, all found instances from the array will be remove, not just
+  the first match.
+
+  $mul - multiply a field
+
+  {
+  "damage" : {
+              "magic": 10,
+              "melee": 2,
+              }
+  }
+
+  db.wands.update(
+    {},
+    {"$mul": {"damage.melee": 10}},
+    {multi: true}
+  )
+
+
+Queries
+
+  Multiple criterias ->
+
+    db.potions.find(
+      {
+        "vendor": "cooked",
+        "rating": 5
+      }
+    )
+
+  Conditional operators
+    $gt, $lt, $gte, $lte, $ne
+
+    // exact
+    db.potions.find(
+      {"price": 20}
+    )
+    // less than
+    db.potions.find(
+      {"price": {"$lt": 20}}
+    )
+    // less than or equal
+    db.potions.find(
+      {"price": {"$lte": 20}}
+    )
+    // range
+    db.potions.find(
+      {"price": {"$gt": 10, "$lt": 20}}
+    )
+    // not equal
+    db.potions.find(
+      {"vendor": {"$ne": "Brewers"}}
+    )
+    // range in array (sizes) <<<<<<<<<<<<<<<<<<<---------------tricky!--
+    db.potions.find(
+      {"sizes": {"$elemMatch": {"$gt": 10, "$lt": 20}}}
+    )
+
+  Example with a multi query including array ->
+
+  db.wands.find(
+  {
+    "maker": {"$ne": "Foxmond"},
+    "level_required": {"$lte": 75},
+    "price": {"$lt": 50},
+    "lengths": {"$elemMatch": {"$gte": 3, "$lte": 4}}
+  })
+
+
+Customizing queries even more
+  To filter the return of a find, use "projections". That is,
+  select which fields to return. Use the second parameter in the
+  find method.
+
+  // Specify what parts we want.
+  db.potions.find(
+    {"grade": {"$gt": 20}},
+    {"vendor": true, "name": true} // only include vendor and name
+  )
+
+  // Specify what parts we don't want (filter away sensitive info)
+  db.potions.find(
+    {"grade": {"$gt": 20}},
+    {"vendor": false, "name": false} // filter away sensitive info
+  )
+
+  // The ONLY time it's possible to have both a true or false value in
+  // a projection is when including or excluding the ObjectID
+  db.potions.find(
+    {"grade": {"$gt": 20}},
+    {"vendor": true, "name": true, "_id": false} // don't want the id.
+  )
+
+Find returns a cursor object. Can iterate it!!
+
+  db.potions.find().count()
+  db.potions.find().sort({"price": 1}) // asc
+  db.potions.find().sort({"price": -1}) // desc
+
+  Example sort names :
+  db.wands.find({},
+    {"name": true}
+    ).sort({"name": 1})
+
+  Basic pagination (not good for large collections!!)
+    1st page
+    db.potions.find().limit(3);
+    2nd page
+    db.potions.find().skip(3).limit(3);
+    3nd page
+    db.potions.find().skip(6).limit(3);
+
+
+Data modeling
+  Solution: Do not embed duplicate data into document. Instead have a
+  id field pointing to another document.
+
+  Potion {
+    "_id": ObjectId(...),
+    "name": "Invisibility",
+    "vendor_id": "KettleCooked"
+  }
+
+  Vendor {
+    "_id": "KettleCooked",
+    "phone": "555",
+    "organic": true
+  }
+
+  Having references like above requires multiple queries.
+
+  Embedding document
+    + Only one query to get all needed data.
+    + Atomic writes (all or nothing)
+
+  Reference documents
+    + Only one place to update (reduce incostincsy)
+    - Mongo does not support transactions, multi document
+      atomic writes. Use with care.
+
+Embedding or referencing? Choice?
+
+  How often is the data used together?
+                Always          Sometimes     Rarely
+      Embed       x (fast rw)       x           x   // Embedding best option most of the times
+      Reference                     x           x
+
+      Example: Potion page, with Comments field and comment composer (user).
+        Embedded best option, to many queries otherwise.
+
+  What is the size of the data?
+                  <100      More than a few 100     Thousands
+      Embed         x                 x                 (read penalty)
+      Reference                       x                 x
+
+      Example: Potions page with comments. Not more than 50 comments.
+        Embedded best option.
+
+  Will the data change often?
+                  Never/rarely                  Sometimes       Constantly
+      Embed             x(dup ok, not changing)                     x
+      Reference                                     x               x (prevent inconsistency from dups)
+
+
+
+Tips
+  1) embedding as first option
+  2) reference data when need to access independently
+  3) reference when big data
+  4) if you find complex references, consider relational database.
+
+
+
+Common aggregations
+  The aggregation (combining data) framework. Instead of using excel.
+
+  Use of stage operators.
+
+  $group is a stage operator
+
+  // The '$vendor_id' is a field path and grabs the value.
+  // The '"_id"' is the group key - must always have a "_id" <<<<<<<<<<--------
+  db.potions.aggregate([
+    {"$group": {"_id": "$vendor_id"}}
+               ----group key---------
+  ])
+
+  This will result in ->
+
+  {"_id": "Kettlecooked"},
+  {"_id": "Cooked"},
+  {"_id": "brewed"},
+
+
+  anything that comes after the group is a accumulator.
+  The accumulator is run on all documents in the group.
+
+  db.potions.aggregate([
+    {"$group": {"_id": "$vendor_id", "total": {"$sum": 1}}}
+               ----group key-------  ----accumulator-----
+  ])
+
+  This will result in ->
+
+  {"_id": "Kettlecooked", "total": 2},
+  {"_id": "Cooked", "total": 1},
+  {"_id": "brewed", "total": 3},
+
+
+  db.potions.aggregate([
+    {"$group": {"_id": "$vendor_id", "total": {"$sum": 1}, "grade_total": {"$sum": $grade}}} // sums the grade VALUES as well
+               ----group key-------  ----accumulator-----
+  ])
+
+  This will result in ->
+
+  {"_id": "Kettlecooked", "total": 2, "grade_total": 234},
+  {"_id": "Cooked", "total": 1, "grade_total": 2334},
+  {"_id": "brewed", "total": 3, "grade_total": 24},
+
+
+
+  db.potions.aggregate([
+    {"$group": {"_id": "$vendor_id", "avg_grade": {"$avg": "$grade"}}}
+               ----group key-------  ----accumulator-----
+  ])
+
+  This will result in ->
+
+  {"_id": "Kettlecooked", "avg_grade": 2.2},
+  {"_id": "Cooked", "avg_grade": 1.2},
+  {"_id": "brewed", "avg_grade": 3.2},
+
+
+  Max grade : $max
+  Can use max and min together. Will get report with both max and min info.
+
+
+
+
+  example:
+  db.wands.aggregate([
+  {"$group": {
+    "_id": "$maker",
+    "total_wands": {"$sum": 1},
+    "max_magic": {"$max": "$damage.magic"},
+    "lowest_price": {"$min": "$price"}
+  }}
+])
+
+
+The aggregation pipeline
+
+  db.potions.aggregate([stage, stage, stage]);
+  Works like passing data from stage to stage and modifying it.
+
+  // Match stage is similar to find! Good to reduce data.
+  // 2nd stage, do the grouping and summing
+  db.potions.aggregate([
+    {"$match": {"ingredients": "unicorn"}},
+    {"$group":
+      {
+      "_id": "$vendor_id",
+      "potion_count": {"$sum": 1}
+      }
+    }
+  ])
+
+  // The result from stage A is available in stage B.
+  db.potions.aggregate([
+    {"$match": {"price": {"$lt": 15}}},
+    {"$project": {"_id": false, "vendor_id": true, "grade": true}},
+    {"$group":{"_id": "$vendor_id", "avg_grade": {"$avg": "$grade"}}},
+    {"$sort": {"$avg_grade": -1}}
+    {"$limit": 3}
+  ])
+
+
+  Example with two stages, where the last stage has and accumulator
+
+  db.wands.aggregate([
+    {"$match": {"powers": "Air Bolt"}},
+    {"$group": {"_id": "$maker", "lowest_level": {"$min": "$level_required"}}}
+  ])
+
+
+  db.wands.aggregate([
+  {"$match": {"price": {"$lt": 50}}},
+  {"$group": {"_id": "$maker", "average_magic": {"$avg": "$damage.magic"}}},
+  {"$match": {"average_magic": {"$gt": 40}}}
+])
+
+
+
+  Example with data
+  db.wands.aggregate([
+  {"$match": {"level_required": {"$lte": 5}}},
+  {"$project": {"_id": false, "maker": true, "damage.magic": true}},
+  {"$group": {"_id": "$maker", "max_damage": {"$max": "$damage.magic"}}},
+  {"$sort": {"max_damage": -1}},
+  {"$limit": 4}
+])
+
+
+
+{
+  "_id": ObjectId('6ff0dbb55e344d51a641c5bd'),
+  "name": "Dream Bender",
+  "maker": "Foxmond",
+  "level_required": 10,
+  "price": 34.9,
+  "powers": [
+    "Fire Deflection",
+    "Love Burst",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 40,
+    "melee": 20
+  },
+  "lengths": [
+    2,
+    3,
+    5
+  ]
+}
+{
+  "_id": ObjectId('f01a4524a6de4c8f98d4e8bf'),
+  "name": "Journey End",
+  "maker": "Foxmond",
+  "level_required": 3,
+  "price": 4.99,
+  "powers": [
+    "Molten Spray",
+    "Fire Whip",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 7,
+    "melee": 6
+  },
+  "lengths": [
+    2.5,
+    3.5,
+    4.5
+  ]
+}
+{
+  "_id": ObjectId('0d2b33b9fd424edc8aef5747'),
+  "name": "Windsong",
+  "maker": "Foxmond",
+  "level_required": 80,
+  "price": 4.99,
+  "powers": [
+    "Wind Orb",
+    "Serenity",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 93,
+    "melee": 61
+  },
+  "lengths": [
+    3
+  ]
+}
+{
+  "_id": ObjectId('2db8f9de713b486cb6196340'),
+  "name": "Destiny Fire",
+  "maker": "Sageseer",
+  "level_required": 4,
+  "price": 24.99,
+  "powers": [
+    "Fire Flare",
+    "Spark",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 20,
+    "melee": 26
+  },
+  "lengths": [
+    2.5,
+    4.5
+  ]
+}
+{
+  "_id": ObjectId('46d9fc0c020a415e8c1f6df9'),
+  "name": "Omega",
+  "maker": "Pinebriar",
+  "level_required": 25,
+  "price": 4.99,
+  "powers": [
+    "Mind Volley",
+    "Reason",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 25,
+    "melee": 25
+  },
+  "lengths": [
+    2,
+    3.5,
+    4.5
+  ]
+}
+{
+  "_id": ObjectId('5609e753bd62caa811c9abbd'),
+  "name": "Riddle Bolt",
+  "maker": "Moonsap",
+  "level_required": 5,
+  "price": 130.99,
+  "powers": [
+    "Earth Charge",
+    "Isolate",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 14,
+    "melee": 4
+  },
+  "lengths": [
+    2,
+    3.5,
+    4
+  ]
+}
+{
+  "_id": ObjectId('c2b806d6edda4071839e4103'),
+  "name": "Dream Caller",
+  "maker": "Sageseer",
+  "level_required": 74,
+  "price": 64.95,
+  "powers": [
+    "Vision Whip",
+    "Mind Charge",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 68,
+    "melee": 34
+  },
+  "lengths": [
+    2.5,
+    3.5,
+    4.5
+  ]
+}
+{
+  "_id": ObjectId('92952c3a0ba344e8a87fcfb5'),
+  "name": "World Shaper",
+  "maker": "Olivemist",
+  "level_required": 24,
+  "price": 54.99,
+  "powers": [
+    "Earth Blast",
+    "Arcane Strike",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 44,
+    "melee": 32
+  },
+  "lengths": [
+    2,
+    5,
+    5.5
+  ]
+}
+{
+  "_id": ObjectId('7aa48b7bccb84f29bdc859b4'),
+  "name": "Cometfell",
+  "maker": "Moonsap",
+  "level_required": 10,
+  "price": 150.95,
+  "powers": [
+    "Solar Orb",
+    "Love Burst",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 17,
+    "melee": 23
+  },
+  "lengths": [
+    1,
+    1.5,
+    3
+  ]
+}
+{
+  "_id": ObjectId('fc25d06ad017449e8c31141a'),
+  "name": "Life Mender",
+  "maker": "Pinebriar",
+  "level_required": 51,
+  "price": 4.99,
+  "powers": [
+    "Healing Orb",
+    "Blessing",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 70,
+    "melee": 10
+  },
+  "lengths": [
+    1,
+    3
+  ]
+}
+{
+  "_id": ObjectId('7e9aac326a2146cba479ae7d'),
+  "name": "Spirit Spire",
+  "maker": "Pinebriar",
+  "level_required": 15,
+  "price": 4.99,
+  "powers": [
+    "Air Bolt",
+    "Restoration",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 14,
+    "melee": 30
+  },
+  "lengths": [
+    2,
+    3.5,
+    4
+  ]
+}
+{
+  "_id": ObjectId('d0a77e57a0544ec7ad5a740b'),
+  "name": "Storm Seeker",
+  "maker": "Olivemist",
+  "level_required": 96,
+  "price": 55.99,
+  "powers": [
+    "Wind Volley",
+    "Static Storm",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 20,
+    "melee": 50
+  },
+  "lengths": [
+    2,
+    3,
+    5
+  ]
+}
+{
+  "_id": ObjectId('5404bf9eb971425e86832c93'),
+  "name": "Sacred Sun",
+  "maker": "Moonsap",
+  "level_required": 13,
+  "price": 33.99,
+  "powers": [
+    "Solar Orb",
+    "Bless",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 17,
+    "melee": 23
+  },
+  "lengths": [
+    1,
+    1.5,
+    4
+  ]
+}
+{
+  "_id": ObjectId('3f34739f4a734fe88b521ed1'),
+  "name": "Oak Bar",
+  "maker": "Foxmond",
+  "level_required": 5,
+  "price": 144.99,
+  "powers": [
+    "Air Bolt",
+    "Wind Flare",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 6,
+    "melee": 40
+  },
+  "lengths": [
+    2.5,
+    3,
+    4
+  ]
+}
+{
+  "_id": ObjectId('f03dc499b6934613be25748c'),
+  "name": "Wind Frenzy",
+  "maker": "Moonsap",
+  "level_required": 83,
+  "price": 73.99,
+  "powers": [
+    "Solar Orb",
+    "Bless",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 17,
+    "melee": 23
+  },
+  "lengths": [
+    1.5,
+    2.5,
+    3
+  ]
+}
+{
+  "_id": ObjectId('8bb40641abc24eba99505f3a'),
+  "name": "Devotion Shift",
+  "maker": "Pinebriar",
+  "level_required": 2,
+  "price": 5.99,
+  "powers": [
+    "Visions",
+    "Soul Search",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 5,
+    "melee": 17
+  },
+  "lengths": [
+    2,
+    3,
+    4
+  ]
+}
+{
+  "_id": ObjectId('3ab0b8ea5e494e3eb88fbf02'),
+  "name": "Brillant Night",
+  "maker": "Sageseer",
+  "level_required": 42,
+  "price": 43.95,
+  "powers": [
+    "Night Orb",
+    "Dark Storm",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 75,
+    "melee": 10
+  },
+  "lengths": [
+    3.5,
+    4.5
+  ]
+}
+{
+  "_id": ObjectId('5fe1769be835443cb1f01162'),
+  "name": "Zelous Guard",
+  "maker": "Olivemist",
+  "level_required": 25,
+  "price": 104.95,
+  "powers": [
+    "Restoration",
+    "Soul Search",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 88,
+    "melee": 53
+  },
+  "lengths": [
+    4,
+    4.5,
+    5
+  ]
+}
+{
+  "_id": ObjectId('5591b572fec24ad1b33ec465'),
+  "name": "Trinity",
+  "maker": "Sageseer",
+  "level_required": 50,
+  "price": 150,
+  "powers": [
+    "Isolate",
+    "Soul Light",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 15,
+    "melee": 40
+  },
+  "lengths": [
+    2,
+    3,
+    4
+  ]
+}
+{
+  "_id": ObjectId('efdd3dea118f43bd9f511cb0'),
+  "name": "Starlight",
+  "maker": "Foxmond",
+  "level_required": 22,
+  "price": 4.99,
+  "powers": [
+    "Light Flash",
+    "Solar Strike",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 30,
+    "melee": 5
+  },
+  "lengths": [
+    1,
+    2,
+    3
+  ]
+}
+{
+  "_id": ObjectId('e4ca50fd2b10406e9bf1ceb5'),
+  "name": "Maple Seer",
+  "maker": "Pinebriar",
+  "level_required": 74,
+  "price": 4.99,
+  "powers": [
+    "Clarity",
+    "Mind Jump",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 85,
+    "melee": 33
+  },
+  "lengths": [
+    1.5,
+    3,
+    4
+  ]
+}
+{
+  "_id": ObjectId('ed54020ace0e46a292978fc2'),
+  "name": "Water Claw",
+  "maker": "Olivemist",
+  "level_required": 10,
+  "price": 100.79,
+  "powers": [
+    "Sea Summon",
+    "Hurricane Blast",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 23,
+    "melee": 11
+  },
+  "lengths": [
+    5,
+    6,
+    7
+  ]
+}
+{
+  "_id": ObjectId('aa37603bbff141bfb7f8b65f'),
+  "name": "Twinkler",
+  "maker": "Olivemist",
+  "level_required": 2,
+  "price": 37.99,
+  "powers": [
+    "Air Bolt",
+    "Star Spray",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 5,
+    "melee": 10
+  },
+  "lengths": [
+    5.5,
+    6,
+    6.5
+  ]
+}
+{
+  "_id": ObjectId('c3ebb2ff2c6043b09d1a6f8b'),
+  "name": "Impure Maple",
+  "maker": "Sageseer",
+  "level_required": 25,
+  "price": 200,
+  "powers": [
+    "Molten Spray",
+    "Fire Whip",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 35,
+    "melee": 50
+  },
+  "lengths": [
+    2,
+    3,
+    5
+  ]
+}
+{
+  "_id": ObjectId('69f4722c6c65457fa8a8aecb'),
+  "name": "Globe Weaver",
+  "maker": "Moonsap",
+  "level_required": 50,
+  "price": 130.99,
+  "powers": [
+    "Earth Charge",
+    "Isolate",
+    "Spell Casting"
+  ],
+  "damage": {
+    "magic": 14,
+    "melee": 4
+  },
+  "lengths": [
+    2,
+    3.5,
+    4
+  ]
+}
+CHECK MY WORK  CONTINUE
+Menu

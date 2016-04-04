@@ -1,0 +1,188 @@
+section
+  almost same as div, if content is related
+  use section.
+  Something with smarter document outline.
+
+  For example a Gallery.
+
+  old way
+    <div class="section">
+      <h2>The galley</h2>
+    </div>
+  
+  html5 way
+    <section>
+      <h2>The galley</h2>
+    </section>
+
+
+header
+  can have multiple (for example inside different sections).
+  normaly for intro content and navigation (at the top of screen)
+
+  old way
+    <div class="header">
+    </div>
+
+  html5 way
+    <header>
+    </header>
+
+
+footer
+  can have multiple (for example inside different sections).
+  in contrast to header, footer is not position-dep.
+  it should describe content it is contained within.  
+
+  old way
+    <div class="footer">
+    </div>
+
+  html5 way
+    <footer>
+    </footer>
+
+
+aside
+  when used within article its content should relate.
+  when used outide artice, its more like a site sidebar.
+
+  old way
+    <div class="sidebar">
+    </div>
+
+  html5 way
+    <aside>
+    </aside>
+
+nav
+  for major navigation.
+
+  old way
+  <ul class="nav">
+    <li></li>
+  </ul>
+
+  html5 way
+  <nav>
+    <ul>
+      <li></li>
+    </ul>
+  </nav>
+
+article
+  sort of a section but for self-contained content (for example rss feed)
+  blog, news story, review, 
+
+  in a gallery, it could be a gallery item.
+
+  old way
+  <ul class="article">
+  </ul>
+
+  html5 way
+  <article>
+  </article>
+
+
+main
+  the main content of the body or document.
+  just one
+  do not include in other html5 elements
+
+  old way
+  <ul class="main">
+    <li></li>
+  </ul>
+
+  html5 way
+  <main>
+  </main>
+
+figure & figcaption
+  Use inside a artice, to show a image with a caption (text at bottom)
+  <figure>
+    <img src="img_pulpit.jpg" alt="The Pulpit Rock" width="304" height="228">
+    <figcaption>Fig1. - A view of the pulpit rock in Norway.</figcaption>
+  </figure> 
+
+time
+  something about the datetime attribute...
+  For example : <p><em>Published on</em>: <time datetime="2013-09-16">September 16, 2013</time></p>
+  
+
+
+
+search field
+  <input type="search"/>
+  mobiles run button is changed to search.
+  got a 'x' to clear search.
+
+email field
+  <input type="email"/>
+  mobiles get @ and . symbol.
+
+url field
+  <input type="url"/>
+  mobiles get / and .com symbol.
+
+date field
+  <input type="date"/>
+  getting a date picker.
+
+month field
+  <input type="month"/>
+  getting a date picker with month selectable.
+
+week field
+  <input type="week"/>
+  getting a date picker with week selectable.
+
+tel field
+  <input type="tel"/>
+  mobiles getting a key pad.
+
+number field
+  <input type="number"/>
+  getting a way to increase/decrease value.
+
+range field
+  <input type="range"/>
+  getting a slider.
+
+color field
+  <input type="color"/>
+  getting a color picker
+
+datalist form element
+  <input type="text" list="browsers"/>
+  <datalist id="browsers">
+    <option value="chrome">
+    <option value="internet explorer">
+    <option value="firefox">
+  </datalist>
+
+
+Attributes
+  
+  placeholder (message inside input)
+
+    old style
+      <input type="text" value="Write something...">
+  
+    html5 style
+      <input type="text" placeholder="Write something...">
+
+  
+  autofocus
+    html5 style
+      <input type="text" placeholder="Write something..." autofocus>
+
+  required (notify user if required field is empty when submitted)
+     html5 style
+      <input .... required>
+  
+  pattern (required to have for example three numbers in input form field)
+     html5 style
+      <input type="text".... pattern="[0-9]{3}>
+     

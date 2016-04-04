@@ -1,0 +1,129 @@
+html
+
+
+
+<body>
+    <h1>title of page</h1>
+    <section>
+        <time>2013-09-16</time>
+        <br>
+        <time>09/16/2013</time>
+        <br>
+        <time datetime="2013-09-16">09/16/2013</time>
+        <h2>subb title of page</h2>
+    </section>
+    
+    
+    <form action="demo_form.asp">prefix:
+        <input type="text" name="prefixInput">
+        <input type="submit" value="Save prefix">
+    </form>
+    <button onClick="STUFF2.displayList();">Add stuff</button>
+     <h1 class="stuff">Stuff</h1>
+
+    <div class="dickDiv">
+        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRaSR1rwNx5rekAHnuw6vO6jEUoYqqNbpgF12d627LaX4J9traM" alt="junk">
+    </div>
+    <img class="dickImg" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRaSR1rwNx5rekAHnuw6vO6jEUoYqqNbpgF12d627LaX4J9traM" alt="junk">
+    <div class="dickBackground">
+         <h1>overtext</h1>
+
+    </div>
+    <ul id="stuffItems">The list:</ul>
+</body>
+
+
+
+
+javascript
+
+
+
+var globalPrefix = "PRE";
+
+var STUFF = {
+    list: ["Peter", "John", "Eriks"],
+
+    addListItemPrivate: function (items, htmlId) {
+        var stuffItems = document.getElementById(htmlId),
+            fragment = document.createDocumentFragment(),
+            element;
+        for (var i = 0; i < items.length; i++) {
+            element = document.createElement("li");
+            element.appendChild(document.createTextNode(items[i]));
+            fragment.appendChild(element);
+        }
+        stuffItems.appendChild(fragment);
+    },
+
+    displayList: function () {
+        this.addListItemPrivate(this.list, "stuffItems");
+        this.addListItemPrivate([1, 2, 3, 4], "stuffItems");
+    },
+};
+
+/**
+ Self running function that returns an object that becomes STUFF2.
+*/
+var STUFF2 = (function (prefix) {
+    var list = ["Peter", "John", "Eriks"];
+
+    var addListItemPrivate = function (items, htmlId) {
+        var stuffItems = document.getElementById(htmlId),
+            fragment = document.createDocumentFragment(),
+            element;
+        for (var i = 0; i < items.length; i++) {
+            element = document.createElement("li");
+            element.appendChild(document.createTextNode(prefix + items[i]));
+            fragment.appendChild(element);
+        }
+        stuffItems.appendChild(fragment);
+    };
+
+    return {
+        displayList: function () {
+            addListItemPrivate(list, "stuffItems");
+            addListItemPrivate([1, 2, 3, 4], "stuffItems");
+        }
+    }
+
+})(globalPrefix);
+
+STUFF.addListItemPrivate(["default"], "stuffItems");
+
+STUFF2.displayList();
+
+
+
+
+
+
+
+css
+
+
+
+.stuff {
+    text-align: center;
+}
+.dickDiv {
+    text-align: center;
+}
+.dickImg {
+    display: block;
+    margin: 0 auto 0 auto;
+}
+.dickBackground {
+    background-color: #FF0000;
+    width: 300px;
+    height: 300px;
+    background-image: url(http://www.craftsinindia.com/newcraftsimages/medicine-buddha-statue-gold-plated.jpg);
+    background-repeat: no-repeat;
+    margin: 0 auto 0 auto;
+}
+
+.dickBackground h1, .dickBackground h2 {
+    text-align: center;
+    color: lightgray;
+}
+

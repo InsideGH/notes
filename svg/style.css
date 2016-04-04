@@ -1,0 +1,37 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  margin: 30px;
+  transition: all 0.4s;
+}
+
+img:hover {
+  transform: scale(1.5);
+}
+
+.phone {
+  display: inline-block;
+}
+.phone circle {
+  animation: grow 2s infinite;
+  transform-origin: center;
+}
+
+.badge {
+  display: inline-block;
+}
+
+.badge circle {
+  fill: "none";
+  stroke: "green";
+  stroke-width: "7";
+}
+
+@keyframes grow {
+  0% {transform: scale(1);}
+  50% {transform: scale(0.5);}
+  100% {transform: scale(1);}
+}

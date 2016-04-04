@@ -1,0 +1,25 @@
+img {
+  max-width: 100%;
+}
+
+.redbackground {
+  background-color: red;
+}
+
+.features .glyphicon {
+  font-size: 32px;
+  color: red;
+}
+
+.footer {
+  background-color: grey;
+}
+
+.ex1 .content {
+  display: none;
+}
+
+.ex1 .content span {
+  display: none;
+  background-color: rgba(44, 44, 44, 0.5);
+}

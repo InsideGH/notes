@@ -1,0 +1,58 @@
+<button onClick="STUFF2.displayList();">Presss</button>
+<h1>Stuff</h1>
+<ul id="stuffItems">The list:</ul>
+
+
+
+
+var STUFF = {
+	list: ["Peter", "John", "Eriks"],
+
+    addListItemPrivate : function (items, htmlId) {
+        var stuffItems = document.getElementById(htmlId),
+        fragment = document.createDocumentFragment(),
+        element;
+        for (var i = 0; i < items.length; i++) {
+            element = document.createElement("li");
+	    	element.appendChild(document.createTextNode(items[i]));
+	    	fragment.appendChild(element);
+        }
+        stuffItems.appendChild(fragment);
+    },
+
+	displayList: function() {
+		this.addListItemPrivate(this.list, "stuffItems");
+		this.addListItemPrivate([1, 2, 3, 4], "stuffItems");
+	},
+};
+
+/**
+ Self running function that returns an object that becomes STUFF2.
+*/
+var STUFF2 = (function() {
+    var list = ["Peter", "John", "Eriks"];
+    
+    var addListItemPrivate = function (items, htmlId) {
+        var stuffItems = document.getElementById(htmlId),
+            fragment = document.createDocumentFragment(),
+            element;
+        for (var i = 0; i < items.length; i++) {
+            element = document.createElement("li");
+	    	element.appendChild(document.createTextNode(items[i]));
+	    	fragment.appendChild(element);
+        }
+        stuffItems.appendChild(fragment);
+    };
+
+    return {
+        displayList: function() {
+            addListItemPrivate(list, "stuffItems");
+            addListItemPrivate([1, 2, 3, 4], "stuffItems");
+        }
+    }
+    
+})();
+
+STUFF.addListItemPrivate(["default"], "stuffItems");
+
+STUFF2.displayList();

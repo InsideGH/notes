@@ -1,0 +1,57 @@
+https://css-tricks.com/almanac/properties/t/transition-timing-function/
+http://codepen.io/alyssamichelle/pen/GJmpPb?editors=110
+http://cubic-bezier.com/#.84,.17,.33,.94
+http://www.smashingmagazine.com/2014/04/understanding-css-timing-functions/
+https://css-tricks.com/guide-svg-animations-smil/
+http://pleeease.io/play/
+www.caniuse.com
+http://www.w3.org/TR/css3-transitions/#properties-from-css
+http://tympanus.net/codrops/2013/11/07/css-overlay-techniques/
+
+*** Transition
+
+fastest seen by human eqe 0.256s;
+transition: prop dur style delay;
+transition: color 0.4s ease 0s;
+
+.btn {
+  color: white;
+  background-color: xxx;
+  transition: background-color 0.4s, color 0.4s;
+  or
+  transition: all 0.4s;
+}
+
+.btn:hover {
+  background-color: yyy;
+  color: red;
+}
+
+
+*** Visibility
+
+Hides elements but they still take up space.
+  opacity: 0; 
+
+Makes elements transparent to clicks.
+  visibility: hidden;
+
+Remove element from DOM (animatation etc not possible)
+  display: none;
+
+Use both opacity and visibility!!
+
+.modal,
+.modal-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal.active,
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+

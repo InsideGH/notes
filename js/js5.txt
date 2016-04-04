@@ -1,0 +1,29 @@
+Augmentation - super cool.
+
+adding or changing properties in a module after the module has already been built?
+
+var wartime = true;
+
+armory.js--------------------------------------------------
+
+var ARMORY = (function(isWar){
+  var local = "";
+  return {
+    publicProp: ""
+    publicMethod: function() {}
+  };
+})(wartime);
+
+-----------------------------------------------------------
+
+
+warchest.js------------------------------------------------
+
+ARMORY = (function(oldArmory){
+  oldArmory.equipWithCoolStuff = function() {// no access to ARMORY private};
+  return oldArmory;
+})(ARMORY);
+
+
+
+TIP: Group file content around needed data. 

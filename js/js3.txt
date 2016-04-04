@@ -1,0 +1,74 @@
+***********************************************************
+***********************************************************
+***********************************************************
+
+
+//var list = ["oldName1", "oldName2"];
+
+tryRun(function() {
+	var names = ["Peter", "Karl"];
+    list = list.concat(names);
+}, function(error) {
+	alert(error);
+})
+
+console.log(list);
+
+function tryRun(method, catcher) {
+	try {
+        method();
+    } catch(error) {
+    	catcher(error);
+    }
+}
+
+/**
+	Here a more detailed error information is given.
+*/
+function tryRun2(method, catcher, list) {
+	try {
+        if ((list instanceof Array) === false) {
+        	throw new TypeError();
+        }
+
+        method();
+    } catch(error) {
+        if (error instanceof TypeError) {
+        	alert("The list is not an array, check for any overwrites!");
+        }
+    	catcher(error);
+    }
+}
+
+
+
+throw new Error("My new error");
+
+***********************************************************
+***********************************************************
+***********************************************************
+
+
+'with' keyword  - do not use it. Use simple caching instead.
+'eval' keyword  - dynamic code...do not use. Expensive.
+		- use JSON.parse instead of eval for textified
+ 		  json.
+
+
+
+var num = 0.1+0.2;
+num.toFixed(1); // rounds off, returns a string.
+parseFloat(num.toFixed(1)); // a number.
+
+parseInt("021", 10); // want it to be parsed as a decimal value.
+
+
+this is funny : 
+console.log(typeof NaN); // Number
+console.log(NaN === NaN); // false
+console.log(isNaN("42")); // false
+
+
+function isANumber(num) {
+  return (typeof num === "number" && !isNan(num));
+}

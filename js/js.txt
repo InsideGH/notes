@@ -1,0 +1,167 @@
+
+console.time("start");
+
+var x = 10;
+
+console.log(x);
+
+for(var i = 0; i < 5; i++) {
+	var x = 1000 + i;
+};
+
+console.log(x);
+
+
+
+
+Array.prototype.somethingmethod = function() {
+
+};
+
+neck = ["a", "b", "c", "d"];
+
+// Use this variant...
+for(var i = 0; i < neck.length; i++) {
+	console.log(neck[i]);
+}
+
+// Do not use this since somethingmethod will be included.
+for(n in neck) {
+	console.log(neck[n]);
+}
+
+nack = {name: "Peter", age: 34};
+for(n in nack) {
+	console.log(nack[n]);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+var InvertedPeninsula = function() {
+    this.inhabitants = [
+        {
+            name: 'Sir Charles',
+            race: 'Human'
+        },
+        {
+            name: 'Ealei',
+            race: 'Elf'
+        }
+    ];
+    // Adds an extra humans method property to the inhabitants array to return all Humans
+    this.inhabitants.humans = function() { /* returns all Human inhabitants */ };
+};
+
+// Create a new invertedPeninsula
+var invertedPeninsula = new InvertedPeninsula();
+
+// Log the name of each invertedPeninsula inhabitant
+for (var i in invertedPeninsula.inhabitants) {
+  console.log(invertedPeninsula.inhabitants[i].name);
+}
+console.timeEnd("start");
+
+
+
+
+
+
+
+
+var rightNow = new Date();
+console.log(rightNow);
+console.log(new Number(rightNow));
+console.log(+rightNow);
+
+//or
+rightNow = +new Date();
+console.log(rightNow);
+
+
+
+function SpeedTest(testImplement, testParams, repetitions) {
+	this.testImplement = testImplement;
+    this.testParams = testParams;
+    this.repetitions = repetitions || 10000;
+    this.average = 0;
+};
+
+SpeedTest.prototype = {
+	startTest: function() {
+    	var beginTime, endTime, sumTimes = 0;
+        for (var i = 0, len = this.repetitions; i < len; i++) {
+        	beginTime = +new Date();
+            this.testImplement(this.testParams);
+            endTime = +new Date();
+            sumTimes += endTime - beginTime;
+        }
+        this.average = sumTimes / this.repetitions;
+        return this.average;
+    }
+};
+
+var aha = function (value) {
+    var a = 0;
+    for(var i = 0; i < value; i++) {
+        a += value + i;
+    }
+	return a;
+}
+
+var speedTest = new SpeedTest(aha, 50000, 2000);
+
+console.log(speedTest.startTest());
+
+
+console.log("\n\n\t\n" == 0); // is true....weird....use === which is stricter.
+
+
+var a = [0,1,2,3,4];
+console.log(a);
+var removed = a.splice(1,1)[0];
+console.log(a);
+
+
+function Armor(location) {
+	this.location = location;
+}
+
+/**
+ This expression does not get hoisted...so it must be before the
+ Metal and Leather armor prototypes are set based on the Armor.prototype.
+*/
+Armor.prototype = {
+    putOn: function() {
+    	alert("Armor is on");
+    }
+};
+
+
+function LeatherArmor(style, buckles) {
+	this.style = style;
+	this.buckles = buckles;
+}
+LeatherArmor.prototype = Object.create(Armor.prototype);
+
+
+function MetalArmor(metal, links) {
+	this.metal = metal;
+	this.links = links;
+}
+MetalArmor.prototype = Object.create(Armor.prototype);
+
+
+var armor = new Armor("sweden");
+
+var king = new MetalArmor("steel", 100);
+console.log(king instanceof Armor);

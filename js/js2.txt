@@ -1,0 +1,26 @@
+// Ternary 
+var armory = {
+  addSword: function(sword) {
+    this.sword = this.sword ? this.sword : [];
+    this.sword.push(sword);
+  }
+};
+
+// Logical OR(short circuiting on first true value)
+// Last value is returned if all is false;
+var armory = {
+  addSword: function(sword) {
+    this.sword = this.sword || [];
+    this.sword.push(sword);
+  }
+};
+
+
+// Contingent assignments
+
+
+// Logical AND(short circuiting on first false value)
+// --->Last>--- value is returned if all is true.
+
+var sword = isNight && armory.getSword("katana");
+// sword above can take 'false', 'undefined' or 'the sword' values.

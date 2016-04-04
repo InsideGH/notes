@@ -1,0 +1,232 @@
+var family = {
+	Peter: { roles: ["father"], age: 41, gender: "male"},
+    Asa: { roles: ["mother"], age: 40, gender: "female"},
+    Max: { roles: ["child", "bigbrother"], age: 10, gender: "male"},
+	Felix: { roles: ["child", "youngbrother"], age: 7, gender: "male"},
+    
+    addMember: function(name, roles, age, gender) {
+    	this[name] = {roles: roles, age: age, gender: gender};
+    },
+
+    addMember2: function(member) {
+        console.log(member);
+    	this[member.name] = {roles: member.roles, age: member.age, gender: member.gender};
+    },
+    
+    /*
+    removeMember: function(name) {
+    	var tmp = this[name];
+        tmp.name = name;
+    	delete this[name];
+        return tmp;
+	}
+    */
+};
+
+Object.prototype.removeMember = function(name) {
+    	var tmp = this[name];
+        tmp.name = name;
+    	delete this[name];
+        return tmp;
+};
+
+var otherFamily = Object.create(family);
+family.Peter.age = 109;
+console.log(otherFamily);
+
+
+console.log(family);
+family.addMember("Leo", "pet", 7, "dog");
+family.addMember2({name: "Leeeeo", age: 7, gender: "doeeg"});
+console.log(family);
+
+
+var removed = family.removeMember("Peter");
+console.log(removed);
+
+for(key in family) {
+	console.log(family[key]);
+}
+
+var value = family.hasOwnProperty("removeMember");
+console.log(value);
+
+var canyonCows = [
+  {name: "Bessie", type: "cow", hadCalf: "Burt"},
+  {name: "Donald", type: "bull", hadCalf: null},
+  {name: "Esther", type: "calf", hadCalf: null},
+  {name: "Burt", type: "calf", hadCalf: null},
+  {name: "Sarah", type: "cow", hadCalf: "Esther"},
+  {name: "Samson", type: "bull", hadCalf: null},
+  {name: "Delilah", type: "cow", hadCalf: null}
+];
+
+Array.prototype.countCattle = function(kind) {
+  var numKind = 0;
+  for(var i = 0; i < this.length; i++) {
+	var cow = this[i];
+    if (cow.type == kind) {
+      numKind++;
+    }
+  }
+  return numKind;
+};
+
+var treeCows = Object.create(canyonCows);
+console.log(treeCows);
+
+console.log(Object.prototype.isPrototypeOf(family));
+console.log(family.isPrototypeOf(otherFamily));
+
+/**
+ This is a Shoe constructor. Use the new keyword to construct a Shoe.
+*/
+function Shoe(shoeSize) {
+	this.size = shoeSize;
+/*    this.putOn = function() {
+    	alert("putOn");
+    };
+*/    
+    console.log("called Shoe constructor " + this.size);
+}
+
+/**
+ A constructor has a prototype. Constructor is not a prototype. Constructor is just a function.
+*/
+/*
+Shoe.prototype.putOn = function() {
+    	alert("putOn size " + this.size);
+    };
+
+Shoe.prototype.takeOff = function() {
+    	alert("taking off " + this.size);
+    };
+
+Shoe.prototype.clean = function() {
+    	alert("cleaning " + this.size);
+    };
+*/
+
+Shoe.prototype = {
+    putOn: function() {
+        alert("putOn size " + this.size);
+    },
+    takeOff: function() {
+    	alert("taking off " + this.size);
+    },
+    clean: function() {
+        alert("cleaning " + this.size);
+    }
+};
+
+Shoe(15);
+var boot = new Shoe(47);
+boot.straps = 2;
+delete boot.straps;
+console.log(boot);
+//boot.putOn();
+//boot.takeOff();
+//boot.clean();
+
+function Fencepost(x, y, postNum) {
+    this.x = x;
+    this.y = y;
+    this.postNum = postNum;
+    this.connectionsTo = [];
+    this.sendRopeTo = function(connectedPost) {
+    	this.connectionsTo.push(connectedPost);
+    };
+    x++;
+    console.log("x is : " + x);
+}
+
+Fencepost(40,3,9);
+var kli = new Fencepost(50,60,70);
+console.log(kli);
+console.log("OUTSIDE X = " + kli.x);
+
+
+var x = 2;
+var y = "2";
+
+/**
+ The '==' ignores the type,
+*/
+/**
+  value of works on all native objects.
+*/
+console.log(x == y);
+console.log(x.valueOf() == y.valueOf());
+
+/**
+ The '===' does not ignores the type. Experts prefer this.
+*/
+console.log(x === y);
+console.log(x.valueOf() === y.valueOf());
+
+console.log(canyonCows.valueOf());
+console.log(canyonCows.toString());
+
+
+var Tornado = function(strength, size, pos) {
+	this.strength = strength;
+    this.size = size;
+    this.pos = pos;
+}
+
+console.log(Tornado.toString());
+
+var joe = new Tornado(5, 10, [["a", 1],["b", 2],["c", 3]]);
+
+/**
+ This creates a NEW property inside the Tornado prototype.
+ This kinda reminds of toString override in java.
+*/
+Tornado.prototype.valueOf = function() {
+    var value = 0;
+    for(var i = 0; i < this.pos.length; i++) {
+    	value += this.pos[i][1];
+    }
+    return value;
+}
+
+Tornado.prototype.toString = function() {
+	return "A tornado with strength " + this.strength + " affecting " + this.valueOf();
+};
+console.log(joe.valueOf());
+console.log(joe.toString());
+
+/**
+  Here is the constructor.
+*/
+console.log(joe.constructor.toString());
+
+/**
+  Here is the constructors overridden prototype.
+*/
+console.log(joe.constructor.prototype);
+/**
+  And here as well.
+*/
+console.log(Tornado.prototype);
+
+/**
+  And here as well.
+*/
+console.log(joe.__proto__);
+
+Object.prototype.findOwnerOfPrototype = function(prop) {
+	var curr = this;
+    while (curr !== null) {
+        if (curr.hasOwnProperty(prop)) {
+        	return curr;
+        } else {
+        	curr = curr.constructor.prototype;
+        }
+    }
+    return "Nada found";
+};
+
+console.log(joe.findOwnerOfPrototype("strength"));
+console.log(joe.findOwnerOfPrototype("valueOf"));
+

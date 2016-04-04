@@ -1,0 +1,157 @@
+http://delicious.com/alyssamichelle/SVG
+http://thenewcode.com/1026/Making-SVG-Accessible
+https://css-tricks.com/clipping-masking-css/
+https://bigbitecreative.com/introduction-svg-animation/
+
+//svg is a html tag, xml type.
+
+<svg height="200px" width="200px">
+</svg>
+
+Height/width sets the viewport.
+
+<svg
+  height="200px"
+  width="200px"
+  xmlns="http://www.w3.org/2000/svg" // different xml, with non-html tags
+  version="1.1">
+
+</svg>
+
+The coordinate system inside svg. The height and width sets
+this system.
+
+0,0       w,0
+
+
+0,h       w,h
+
+
+
+Having the svg in a img tag, you don't have access to the inners to animate.
+
+
+Having svg spefic css inline doesn't require 'px' to be
+specified, but having the style in stylesheets, requires
+px to be typed.
+
+Anything that sets a coordinate must stay inline.
+
+
+Text anchor is in bottom left!!!! Not like all other that
+are top left.
+  But this can be fixed with     text-anchor: middle;
+
+
+
+svg element stack on each other, order is important.
+
+
+possible to group 'g' stuff and translate them all together.
+  <g class="triangle-group" transform="translate(54,43)">
+    <polygon points="..."/>
+  </g>
+
+  in stylesheet ->
+  .triangle-group polygon {
+    stroke-width: 1px;
+  }
+
+
+To rotate using the svg transform :
+  <g class="triangle-group" transform="rotate(deg, xorg, yorig)">
+    <polygon points="..."/>
+  </g>
+
+  if xorig/yorig is not specificed it's the top left corner!!!!
+
+
+To scale using the svg origin :
+  <g class="triangle-group" transform="scale(value)">
+    <polygon points="..."/>
+  </g>
+
+  The scale origin is top left corner, not center. Need
+  to adjust with translate.
+
+
+Responsive svg
+
+  Don't set the width and height in the svg.
+
+  Instead set width to xx% and height to auto on the
+  parent of the svg. Then the svg should have viewbox
+  set.
+
+  <div class="svgbadge">
+  <?xml version="1.0" encoding="utf-8"?>
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 268 268">
+
+
+Path
+
+  <path d="M7,10 L7, 10 L12,0 L17,10 Z"/>
+  Lines
+    M - start
+    L - Line points
+    Z - end
+
+  Curves
+    M - start
+    C - Curve points
+    Z - end
+
+    M - start
+    Q - Qadratic Curve points
+    Z - end
+
+    M - start
+    A - Eliptical arc points
+    Z - end
+
+    Also supports fill, stroke, stroke-width + additional ->
+    stroke-linecap
+    stroke-dasharray
+    stroke-dashoffset
+
+
+Symbol
+  To use same svg in multiple places (inline)
+
+  <div class="defined-icon">
+    <?xml version="1.0" encoding="utf-8"?>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg"/>
+    <symbol id="phone">
+      <rect x="153" y="222" fill="#E04E27" width="36" height="60" />
+      <rect x="153" y="218" fill="#E04E27" width="36" height="10" rx="5" />
+      <rect x="183" y="252" fill="#FBF6A7" width="2" height="8" />
+    </symbol>
+  </div>
+
+  .defined-icon {
+    display: none;
+  }
+
+
+  Viewbox goes here!!!!!!!!!!
+  Must point (use xlink) to a ID!!! (not class)
+    <svg xmlns="http://www.w3.org/2000/svg"
+         viewbox="0 0 268 268"
+         class="displayed-icon"
+         version="1.1"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+      />
+      <use xlink:href="#phone"/>
+
+  .displayed-icon {
+    height: auto;
+    width: 100%;
+  }
+
+  The use can be a file (not working on <=ie10)
+
+
+Accessability
+
+  <title>BLA</title>
+  <desc> d d d ksj fkd skfj </desc>

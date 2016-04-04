@@ -1,0 +1,76 @@
+http://compass-style.org/
+Setup sass
+	http://incident57.com/codekit/index.html
+	http://mhs.github.io/scout-app/
+	http://fireapp.kkbox.com/
+
+Horizontal grid
+	http://susy.oddbird.net/
+
+Baseline with images (baseline.js)
+	https://github.com/daneden
+
+https://css-tricks.com/examples/IconFont/
+
+Like Sass but without sprites and vertical rhytm
+	http://bourbon.io/
+
+Teacher
+	https://gist.github.com/nickawalsh/4232779
+
+
+@import "icons/*.png" // this is creating a combined sprite image from the images/icons folder.
+@include all-icons.sprites // sets up classes such as .icons-cancel .icons-next .icons-warnings
+                            // problems : width, height is not included.
+
+
+
+Manual way - better.
+
+@import "compass"
+$logos: sprite-map("logos/*.png") // does not create the map at this point.
+
+.logo
+  background: $logos sprite-position($logos, logo)
+  display: block
+  text-indent: -9999px
+  +sprite-dimensions($logos, logo)
+  &:hover
+    background-position: sprite-position($logos, hover)
+  &:active
+    background-position: sprite-position($logos, active)
+    
+
+
+
+
+
+
+Optimized with Sass, ver 1
+
+$icons: sprite-map("icons/*.png'); // does not create the map at this point.
+$icon-names: kalle pelle nisse;
+
+@each $icon in $icon-names {
+  .icn-#{$icon} {
+     background-position: sprite-position($icons, $icon); // a function call
+     @include sprite-dimension($icons, $icon);
+  }
+}
+
+
+
+Optimized with Sass, ver 2 (only need to add icon to folder, rest automatic.)
+
+$icons: sprite-map("icons/*.png'); // does not create the map at this point.
+
+@each $icon in sprite_names($icons) {
+  .icn-#{$icon} {
+     background-position: sprite-position($icons, $icon); // a function call
+     @include sprite-dimension($icons, $icon);
+  }
+}
+
+
+
+

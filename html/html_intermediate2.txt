@@ -1,0 +1,70 @@
+Links
+https://css-tricks.com/pseudo-class-selectors/
+https://css-tricks.com/pseudo-element-roundup/
+https://css-tricks.com/
+https://html5boilerplate.com/
+http://sass-lang.com/
+http://abookapart.com/
+http://www.peachpit.com/store/bulletproof-web-design-improving-flexibility-and-protecting-9780321808356
+http://getfirebug.com/
+
+pseudo classes
+  all start with a :
+  link pseudo classes
+    :hover
+    :focus
+    :active
+    :visited
+
+  :nth-child(odd|even) - zebra stripping
+  :nth-child(an+b) - a is interval, b is start point
+  :nth-of-type()
+
+  :last-child  (of its parent, if there is something else type after it's not last child)
+  :first-child (of its parent, if there is something else type before it's not first child)
+  :only-child
+
+  :after
+  :before
+    h1:after{
+      content: " Peter"
+    }
+
+
+Using multiple pseudo classes:
+  p:first-child:first-line {
+    font-weight: bold;
+  }
+
+
+placing image with before and after.
+  Note, must have content=''.
+
+  .store:before {
+    position: absolute;
+    background: url(store-before.png);
+    height: 23px;
+    width: 54px;
+    content:'';
+    top: -3px;
+    left: -3px;
+  }
+  .store:after {
+    position: absolute;
+    background: url(store-after.png);
+    height: 20px;
+    width: 41px;
+    content:'';
+    bottom: -3px;
+    right: -3px;
+  }
+
+Handling hoover of the store button
+  .store:hover:before, .store:focus:before {
+    top: -5px;
+    left: -5px;
+  }
+  .store:hover:after, .store:focus:after {
+    bottom: -5px;
+    right: -5px;
+  }

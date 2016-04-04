@@ -1,0 +1,609 @@
+Why
+  no structure.
+  don't loose your data into the dom, abstract it out to a model.
+
+Does
+  app structure
+  models to repr data
+  views to hook up models to dom
+  sync data to and from server
+
+Model (cap letters are class)
+  Spec a class
+    var TodoItem = Backbone.Model.extend({});
+
+  With defaults
+    var TodoItem = Backbone.Model.extend({
+      defaults: {
+        aaa: "sss"
+      }
+    });
+
+  With defaults evaluated when the instance is create instead,
+  make the defaults return a function returning the object.
+    var Appointment = Backbone.Model.extend({
+    defaults: function() { return {
+          title: 'Checkup',
+          date: new Date()
+        }
+      }
+    });
+
+  Instance it
+    var todoItem = new TodoItem();
+    // The default values exist here as well.
+    todoItem.get('aaa');
+
+    todoItem.get('...');
+    todoItem.set('...');
+
+  Save to server
+    todoItem.save(); // configuration needed!
+
+View
+  Every view instance has it's top EL (this.el) element.
+
+  var TodoView = Backbone.View.extend({
+    tagName: 'li',
+    render: function() {
+    	var html = '<li>' + this.model.get('title') + '</li>';
+	    $(this.el).html(html);
+    }
+  });
+
+  var todoView = new TodoView.create({model: todoItem});
+
+  Render the view!!
+    appointmentView.render();  <----------------------
+
+  Attach it to the dom!!
+    $('#app').html(appointmentView.el); <---------------------
+
+  It's possible to print the el as well
+  console.log(todoView.el)
+    <h3>....</h3> The description
+
+
+
+
+
+
+Server communication
+
+  FETCHING FROM SERVER
+
+    In a NON restful way
+    var TodoItem = Backbone.Model.extend({});
+      var todoItem = new TodoItem();
+      todoItem.url = '/todo';
+      todoItem.fetch();
+
+    Restful way
+      var TodoItem = Backbone.Model.extend({urlRoot: '/todos'});
+      var todoItem = new TodoItem({id: 1}); <-------------------- The id!
+      todoItem.fetch(); // GET /todos/1 and populates the instance!
+
+      todoItem.set({description: "..."});
+      todoItem.save(); // SET /todos/1 (sync with the server)
+
+  CREATE
+
+    var todoItem = new TodoItem();
+    todoItem.set('', {...});
+    todoItem.save(); // POST /todos
+
+    todoItem.get('id'); // returns 2, which means that the server has set id.
+
+    todoItem.destroy(); // DELETE /todos/2
+
+    get json from model
+    todoItem.toJSON();
+
+
+Events on models
+
+  todoItem.on('some-event', function() {
+  });
+
+  todoItem.trigger('some-event');
+
+  special events
+    change
+      todoItem.on('change', function() {
+        // called on any set or get
+      });
+
+    prevent trigger (silent)
+      todoItem.set({somedata: "data"}, {silent: true});
+
+  Turn off event listener with .off()
+    todoItem.off('some-event', function() {
+
+    });
+
+  Build in events
+    change
+    change:attr
+    destroy
+    sync
+    error
+    all
+
+
+
+Examples
+  Cancel appointment
+    var appointment = new Appointment({id: 1});
+    appointment.set('cancelled', true);
+    appointment.save()
+
+  Listen on changes to appointments
+    appointment.on('change:cancelled', function(){
+      alert("Hey Dr. Goodparts, your appointment has changed!");
+    });
+
+
+
+
+
+
+Closer look Views
+  var SimpleView = Backbone.View.extend({});
+  var simpleView = new SimpleView();
+  console.log(simpleView.el) ->
+    <div></div>
+
+    var SimpleView = Backbone.View.extend({
+      tagName: 'li'
+    });
+    var simpleView = new SimpleView();
+    console.log(simpleView.el) ->
+      <li></li>
+
+    var SimpleView = Backbone.View.extend({
+      tagName: 'artice',
+      id: 'todo-view',
+      className: 'todo'
+    });
+    var todoView = new SimpleView();
+    console.log(todoView.el) ->
+      <artice class="todo" id="#todo"></artice>
+
+
+    To get the html from the todoView (jQuery)
+      $('#todo-view').html()
+
+    To get the html from the todoView (backbone, the el is a dom element)
+      $(todoView.el).html()
+
+      or a shortcut ->
+      todoView.$el.html();  <---------------------------------------
+
+
+  Example :
+
+  var TodoView = Backbone.View.extend({
+    tagName: 'li',
+    id: 'todo-view',
+    className: 'todo',
+    render: function() {
+      var html = '<h3>' + this.model.get('title') + '</h3>';
+      this.$el.html(html);
+    }
+  });
+
+  ---->
+    var todoView = new TodoView({model: todoItem});
+    todoView.render();
+    log(todoView.el); ->
+      <article id="todo-view" class="todo">
+        <h3></h3>
+      </article>
+
+
+  Lot of html and attribute gets uggly and messy.
+
+
+
+Templating
+
+  Backbone comes with underscore library, which includes templating as well
+
+
+  var TodoView = Backbone.View.extend({
+    template: _.template('<h3><%=description%></h3>')
+    render: function() {
+      var attributes = this.model.toJSON();
+      this.$el.html(this.template(attributes));
+    }
+  });
+
+
+  Events in views.
+    jQuery
+      $("h3").click(alertStatus);
+      function alertStatus(e) {
+        alert("hey!");
+      }
+
+    backbone
+      var TodoView = Backbone.View.extend({
+        events: {
+          "click h3": "alertStatus" // its the h3 inside the view, scoped!
+        },
+        alertStatus: function(e) {
+          alert("Hey!")
+        }
+      })
+
+      var SampleView = Backbone.View.extend({
+        events: {
+          "<event> <selector>": "<method>"
+        },
+      });
+
+      All events:
+        change, click, dblclick, focus, focusin, focusout, hover, keydown,
+        keypress, load, mousedown, mouseenter, mouseleave, mousemove, mouseout,
+        mouseover, mouseup, ready, resize, scroll, select, unload
+
+
+      Example with events:
+        var AppointmentView = Backbone.View.extend({
+          template: _.template('<span><%= title %></span>'),
+          events: {
+            "click": function(e) {
+            	alert(this.model.get('title'));
+            }
+          },
+          render: function(){
+            this.$el.html(this.template(this.model.toJSON()));
+          }
+        });
+
+
+Model and views in more detail
+
+  With a checkbox in the view and some code that handles if the checkbox
+  is checked or not.
+
+  Server
+  data   ->   Models   ->   Views  ->   DOM
+                ^
+                |
+  data   <-   Models   <-   Views  <-   DOM
+
+
+  *************FROM VIEW TO MODEL**************
+  //Receive any checkbox events.
+  var TodoView = Backbone.View.extend({
+    template: _.template('<h3 class="<%= status %>"><%=description%></h3>')
+    events: {
+      "change input": 'toggleStatus'
+    },
+    initialize: function() {
+      // This is called when view is created
+      this.model.on('change', this.render, this); // give it the function to call.
+      this.model.on('destroy', this.remove, this);
+    },
+    render: function(){
+      this.$el.html(this.template(this.model.toJSON()));
+    },
+    remove: function(){
+      this.$el.remove();
+    },
+    toggleStatus: this.model.toggleStatus()
+  });
+
+  // The model logic stays in the model.
+  var TodoItem = Backbone.Model.extend({
+    toggleStatus: function() {
+      if (this.get('status') === 'incomplete') {
+        this.set({status: 'complete'})
+      } else {
+        this.set({status: 'incomplete'})
+      }
+      this.save(); // PUT /todos/1
+    }
+  });
+
+  .complete {
+    color: red;
+    etc
+  }
+  **************FROM MODEL TO VIEW******************
+
+    add a this.render() inside the toggleStatus method in the view?? - No!
+
+    See intialize method above in the view. It will re-render the view
+    whenever a model change is detected. The last this is the context
+    that is given to change event callback.
+      The render function is called with the window context. Must be
+      the TodoView context, thus the last this.
+
+
+
+    Examples:
+
+    var AppointmentView = Backbone.View.extend({
+      template: _.template('<span><%= title %></span><a>cancel</a>'),
+      events: {
+        'click a': function() {
+        this.model.set({cancelled: true});
+        }
+      },
+      render: function(){
+        this.$el.html(this.template(this.model.toJSON()));
+      }
+    });
+
+
+
+Collections
+
+  Could create a bunch of items and loop over them and put in dom.
+    var item1 = new Item();
+    var item2 = new Item();
+    var item3 = new Item();
+    var list = [item1, item2, item3];
+
+  But better is
+    var TodoList = Backbone.Collection.create({
+      model: TodoItem // the collection is managing TodoItems
+    });
+
+    var todoList = new TodoList();
+    .length
+    .add(.)
+    .at(0)
+    .get(1) // by id
+    .remove(instance)
+
+    var todos = [item1, item2, item3];
+    todoList.reset(todos) // now the collection contains the array.
+
+
+  Fetching data from server
+    var TodoList = Backbone.Collection.extend({
+      url: '/todos'
+    });
+
+    new TodoList().fetch(); // GET /todos ->
+      [item1, item2, item3]
+
+  Support for event just like with Backbone models.
+    + reset event // fetch and reset
+    + add // model added
+        var appointments = new AppointmentList();
+        appointments.on('add', function(item) {
+    	   console.log(item.get('title'));
+        });
+    + remove // model removed
+
+  Support for model events in the collection. That is events in the model
+  bubble up to the collection.
+    + change
+    + change:attr
+    + destroy
+    + sync
+    + error
+    + all
+
+  Supports forEach, map, filter....+ a lot more (underscore library!!)
+
+
+  Examples
+    var AppointmentList = Backbone.Collection.extend({
+      model: Appointment,
+      url: '/appointments'
+    });
+    var appointments = new AppointmentList();
+    appointments.fetch();
+
+    var appointments = new AppointmentList();
+    appointments.fetch();
+    appointments.on('reset', function() {
+    	alert(this.length);
+    });
+
+    appointments.fetch({silent:true});
+
+
+
+
+
+Collection - Views
+  Just as model and view has one to one mapping
+
+  A collection view doesn't render anything, it delegates
+  that to the model-views.
+
+  The collection view has many models and many views.
+
+
+
+  var TodoListView = Backbone.View.extend({
+    render: function() {
+      this.collection.forEach(this.addOne, this);
+    },
+
+    addOne: function(todoItem) {
+      var todoView = new TodoView({model: todoItem});
+      this.$el.append(todoView.render().el);
+    },
+
+    addAll: function(list) {
+      list.forEach(function(todoItem) {
+        addOne(todoItem);
+      });
+    },
+
+    initialize: function() {
+      // This takes care of handling the add to the collection.
+      this.collection.on('add', this.addOne, this);
+
+      // This takes care of handling the fetch from server
+      this.collection.on('reset', this.addAll, this);
+    }
+  });
+
+  var todoListView = new TodoListView({collection: todoList});
+  todoListView.render();
+  console.log(todoListView.el);
+
+
+  // Need to handle the react to add in the collectionview above.
+  // See on 'add'
+  todoList.add(new TodoItem({...}));
+
+
+  // Need to handle the react on fetch from server as well
+  // See on 'reset' in the view.
+  todoList.fetch();
+
+
+
+
+  Inserting the appointmentView into the DOM ->
+    $('#app').append(appointmentsView.render().el);
+
+
+  When removing something from the view ->
+
+  // Need to handle the remove from the collection.
+    todoList.remove(todoItem);
+
+    In the todoList collection initialize ->
+      // This takes care of handling removal .
+      this.on('remove', this.hideModel);
+
+    hideModel: function(model) {
+      model.trigger('hide');
+
+      --------------------
+      Inside the TodoItem initialize method add the following line ->
+        this.model.on('hide', this.remove, this);
+      --------------------
+    },
+
+
+
+
+Router and history
+
+  To not refresh the whole page:
+  $('a.todo').click(function(e) {
+    e.preventDefault();
+    // show the stuff.
+  });
+
+  var TodoRouter = Backbone.Router.extend( {
+    routes: { "": index,
+              "/todos/:id": 'show'}, // NOTE, the callback is in text form.
+    index: function() {
+      this.todoList.fetch();
+    },
+    show: function(id) {
+      this.todoList.focusOnTodoItem(id); // Does stuff to only show the item that is passed in.
+    },
+    initialize: function(option) {
+      this.todoList = option.todoList;
+    }
+  });
+
+  var todoList = new TodoList();
+  var TodoApp = new TodoRouter({todoList: todoList});
+
+  Backbone.history.start();
+  router.navigate("todos/1"); -> #todos/1
+
+  Backbone.history.start({pushstate: true});
+  router.navigate("todos/1"); -> /todos/1
+
+  router.navigate("todos/1", {trigger: true}) //
+
+
+
+  Example:
+    Time to implement the show action. As you can see you've already created an instance of the Appointment and passed in the id from the URL.
+    You'll want to create an instance of the AppointmentView, render it, and replace the contents of #app with its top-level element.
+    Lastly, don't forget to fetch data from the server for the appointment.
+
+    Beautiful! But one problem: hitting the back button does update the URL in the browser correctly, but the DOM doesn't go back to being a list :(.
+    First, add the root route and point it to the index action.
+    As you can see we are passing in a appointmentList list collection in the router's initialize function. Finish out the index action by replacing the content of #app with the appointmentsView. Make sure you fetch new data for the appointmentList from the server.
+
+    var AppRouter = Backbone.Router.extend({
+      routes: { "": "index",
+        "appointments/:id": "show" },
+
+      initialize: function(options){
+        this.appointmentList = options.appointmentList;
+      },
+
+      index: function(){
+        var appointmentsView = new AppointmentListView({collection: this.appointmentList});
+        appointmentsView.render();
+        $('#app').html(appointmentsView.el);
+        this.appointmentList.fetch();
+      },
+
+      show: function(id){
+        var appointment = new Appointment({id: id});
+        var appointmentView = new AppointmentView({model: appointment});
+        appointmentView.render();
+        $('#app').html(appointmentView.el);
+        appointment.fetch();
+      }
+    });
+
+
+  Example2:
+  APP ORGANIZATION
+    We are so close to wrapping up! Before we go, let's use our Router to clean up our app a bit.
+    First, instead of assigning a Router class to AppRouter, just create the Router instance.
+    Next, instead of passing in the appointmentList collection in initialize, create an instance of AppointmentList and assign it to this.appointmentList.
+    Add a start function to the router to start our Backbone history with pushState on.
+    Finally, call the router's start function from inside a jQuery ready function to ensure we don't start updating the DOM before it's ready.
+
+    var AppRouter = new(Backbone.Router.extend({
+      routes: {
+        "appointments/:id": "show",
+        "": "index"
+      },
+
+      initialize: function() {
+        this.appointmentList = new AppointmentList();
+      },
+
+      start: function() {
+        Backbone.history.start({
+          pushState: true
+        });
+      },
+
+      index: function() {
+        var appointmentsView = new AppointmentListView({
+          collection: this.appointmentList
+        });
+        appointmentsView.render();
+        $('#app').html(appointmentsView.el);
+        this.appointmentList.fetch();
+      },
+
+      show: function(id) {
+        var appointment = new Appointment({
+          id: id
+        });
+        var appointmentView = new AppointmentView({
+          model: appointment
+        });
+        appointmentView.render();
+        $('#app').html(appointmentView.el);
+        appointment.fetch();
+      }
+    }));
+
+    $(document).ready(function() {
+      AppRouter.start();
+    });

@@ -1,0 +1,226 @@
+http://responsv.com/flexible-math/
+http://abookapart.com/products/responsive-web-design
+http://adaptivewebdesign.info/1st-edition/
+http://responsive.is/typecast.com
+http://www.markboulton.co.uk/
+http://futurefriendlyweb.com/resources.html
+http://www.lukew.com/
+http://mediaqueri.es/
+https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag
+
+
+fluid design
+  standard font px size for browsers is 16px.
+ 
+  <h1>Welcome to this place
+    <a href="#">Press here</a>
+  <h1>
+ 
+  html {
+    /*
+    The standard font size in browsers is 16px.
+    This means that 1em is 16px.
+    */
+    font-size: 16px;
+  
+    /*
+      formula: px -> ems
+      "target font size"/"context font size" = result(ems);
+    */
+  }
+
+  body {
+    /*
+    This percent of font size means that
+    1em now is 10px instead.
+    */
+    font-size: 62.5%
+  }
+
+  h1 {
+    font-size: 3em; /*30px/10px*/
+  }
+
+  h1 a {
+    font-size: 0.44446; /*14px/30px*/
+  }
+
+
+
+fluid sites
+  1) Fluid grid
+  2) % (of containing element) values instead of px.
+
+  margin is outside element
+  padding is inside element
+
+  the 'context' when dealing with margins
+  is the ouside context, i.e the containers width in px.
+
+  the 'context' when dealing with padding
+  is the inside context, i.e the content width in px.
+
+
+
+Adaptivness
+  1) Create a separate mobile site.
+  2) Adaptive design - adapt desktop design to mobile design.
+     Adapt style in css to mobile env.
+     Designing to meet a specific context (device, screen size, resolution)
+     1) Who is user
+     2) How use site?
+     3) Context (which device)
+     4) Content (and how it's going to adapt based on context)
+  3) Responsive site.
+
+
+Restaurant
+  1) Find it and learn more
+  2) 
+  3) Laptop or mobile device.
+  4) Locationinfo, menu and about.
+
+******2), Adaptive design parts (3 parts) involved in adaptive web design
+
+
+  1) Adaptive markup (header, menu about section).
+  2) Break Points - where design breaks down
+       Typically the height and width of the target viewport
+       ? Iphone, kindle android?
+       Keep simple, use standard iphone size 480px * 320 px
+       Could have higher resolution, but same "browser size".
+         For images we to work with pixel density!!
+  3) Media Queries - to make it work
+     Example (not good anymore) : 
+       <link rel="stylesheet" href="global1.css" media="all">
+       <link rel="stylesheet" href="global2.css" media="screen">
+       <link rel="stylesheet" href="global3.css" media="print">
+       Problem with this, there are a number of different devices ->
+       <link rel="stylesheet" href="global3.css" media="handheld">
+
+     Example (media type = screen, query= max-width) : <= 320px
+       @media screen and (max-width: 320px) {
+         body {
+           font-size: 100%;
+         }
+       }
+
+     Place media queries in bottom of html file. Can put it in separate style sheet
+     but that increases loadtime.
+
+  Example of stacking a content and sidebar on mobile device compared to float left and right.
+
+  @media screen and (max-width: 320px) {
+    .logo {
+      width: inherit;
+      float: none
+    }
+    nav {
+      width: inherit;
+      float: none;
+    }
+  }
+
+  Example of resizing a nav ul li on a mobile device.
+  @media screen and (max-width: 320px) {
+    nav ul li {
+      margin-right: 5%;
+      text-transform: uppercase;
+      font-size: 0.8125em; /*13px/16px*/
+    }
+  }
+
+
+
+******3), Responsive design parts involved in responsive web design
+  1) The mobile first approach
+     Luke Wroblewski
+     Focus, simplify content, prioritice layout opt user experience
+     Space is much more valuable
+     A great design concept.
+     
+     All responsive are adaptive
+     Not all adaptive and responsive.
+
+     Responsive sites are fluid sites with breakpoints.
+     Adaptive design is selectivly optimized for the context we are targeting.
+
+  2) Responsive applied
+  3) Advanced Media Queries
+
+
+  Recap : 
+  1) Fluid layouts --> "limitations with viewport size"
+  2) Adaptive design --> "doesn't cover universal web"
+  3) Responsive design --> "flexible and universal"
+
+
+  Responsive design : content defines break points
+  Adaptive design : for example screen resolution defines break points.
+
+  
+  Example when making text smaller...and line-height context is new text size.
+
+  @media screen and (max-width: 850px) {
+    h1 {
+      font-size: 3.125em; /*50px/16px*/
+      line-height: 0.6em; /*30px/50px*/
+    }
+  }
+
+
+****** Responsive media
+
+  Responsive images/videos. Not supported on IE7 (use AlphaImageLoader)
+
+    article {
+      background-color: red;
+      width: 100px;
+    }
+    img {
+      width: 100%; // in this case same as 100px
+    }
+
+    Add the img css to the top of stylesheet.
+
+  
+  JavaScript libraries
+    FitText
+    Lettering.js
+    FitVids.js
+
+  Retina images
+    1.5x - 2x the pixel density
+
+    Use media queries.
+    @media 
+      only screen and (min-device-pixel-ratio: 1.5),
+      only screen and (-webkit-min-device-pixel-ratio: 1.5) 
+    {
+      .logo {
+         background-image: url(logo@2x.png);
+         background-size: 75px 75px;
+         -webkit-background-size: 75px 75px;
+      }
+    }
+
+    PictureFill (need to inlcude picturefill.js in you <head>)
+      <head>
+        <script src="picturefill.js"></script>
+      </head>
+
+      Specifies different image files
+      <picture>
+        <source src="content-image.jpeg" />
+        <source src="content-image.jpeg" media="(min-width: 800px)"
+        <noscript>
+          <!-- in case javascript is disabled -->
+          <img src="content-image.jpg"/>
+        </noscript>
+      </picture>
+      
+    
+  To set scaling assets
+    img, embed, object, video {
+      max-width: 100%;
+    }

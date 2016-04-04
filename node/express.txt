@@ -1,0 +1,450 @@
+http://expressjs.com/en/4x/api.html
+https://github.com/strongloop/express
+https://github.com/expressjs/serve-static
+https://github.com/expressjs/morgan
+
+---> ejs, test as well : 
+https://www.codeschool.com/screencasts/soup-to-bits-building-blocks-of-express-js
+
+---> socketIO, redis , node.
+https://www.codeschool.com/screencasts/soup-to-bits-real-time-web-with-node-js
+
+Node functions
+	response.write()
+	response.end()
+
+Above same as 
+	response.send(); or response.json()
+
+--------------------------------------------------------------------------
+
+app.get('/block', function(req, res) {
+  var data = ["Peter", "Kalle", "Nisse"];
+  res.send(data);
+});
+
+The above express send method fills in header stuff...
+
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 25
+ETag: W/"19-rsIfuFunKuMtoMp3d6fdSQ"
+Date: Wed, 30 Dec 2015 12:05:53 GMT
+Connection: keep-alive
+
+["Peter","Kalle","Nisse"]
+
+--------------------------------------------------------------------------
+
+app.get('/redirect', function(req, res) {
+  res.redirect('/blocks2');
+  or
+  res.redirect(301,'/blocks2'); // 301 is permanent redirect
+
+});
+
+curl -i http://localhost:8080/redirect (gives info, a browser actually redirects)
+
+HTTP/1.1 302 Found        <<<--------------------------- 302
+X-Powered-By: Express
+Location: /blocks2        <<<--------------------------- location
+Vary: Accept
+Content-Type: text/plain; charset=utf-8
+Content-Length: 30
+Date: Wed, 30 Dec 2015 12:12:07 GMT
+Connection: keep-alive
+
+Found. Redirecting to /blocks2
+
+--------------------------------------------------------------------------
+Middleware
+
+First A and the B is called for each request. Next does the pass on.
+Continues until someone does a response.send().
+
+app.use(function(request, response, next) {
+  console.log("middlewareA url requested: " + request.url);
+  next();
+});
+
+app.use(function(request, response, next) {
+  console.log("middlewareB method: " + request.method);
+  next();
+});
+
+--------------------------------------------------------------------------
+
+app.use(express.static('chat_public'));
+
+Inside index.html, the png is in the chat_public folder.
+  <p><img src="chat_bg.png" alt=""></p>
+
+from css one must back down
+  background-image: url('../chat_bg.png');
+
+
+--------------------------------------------------------------------------
+// CommonJS
+module.exports = function() {}
+
+--------------------------------------------------------------------------
+Own middleware logger
+https://github.com/expressjs/morgan
+
+module.exports = function(request, response, next) {
+  var start = +new Date();
+  var stream = process.stdout;
+  var url = request.url;
+  var method = request.method;
+
+  // response is a EventEmmitter.
+  response.on('finish', function() {
+    var duration = +new Date() - start;
+    var message = method + " to " + url + " took " + duration + " ms\n";
+    stream.write(message);
+  });
+  next();
+};
+
+
+app.use(logger);
+
+
+--------------------------------------------------------------------------
+
+How to set status code on response
+response.status(404).json("Path requested does not exist");
+
+--------------------------------------------------------------------------
+query string parameters
+
+GET to /blocks?limit=1
+
+these parameters are added to request.query
+
+Client: 
+        $.get('/block?limit=1', appendToList);
+
+Server:
+	app.get('/block', function(req, res) {
+	  var data = ["Peter", "Kalle", "Nisse"];
+	  if (req.query.limit >= 0) {
+	    res.json(data.slice(0, req.query.limit));
+	  } else {
+	    // res.send(data);
+	    res.json(data);
+	  }
+	});
+
+--------------------------------------------------------------------------
+Dynamic routes, part of the url path.
+
+GET to /blocks/Peter
+GET to /blocks/Åsa
+GET to /blocks/Max
+GET to /blocks/...
+
+
+var blocks = {
+  Peter: "means ...",
+  Åsa: "means ...",
+  Max: "means ...",
+}
+
+app.get('/blocks/:name', function(request, response) {
+  var meaning = blocks[request.params.name];
+})
+
+The above creates a name property on the request params
+   --> request.params.name
+
+
+Example :
+
+var cities = {
+  'Lotopia': 'Rough and mountainous',
+  'Caspiana': 'Sky-top island',
+  'Indigo': 'Vibrant and thriving',
+  'Paradise': 'Lush, green plantation',
+  'Flotilla': 'Bustling urban oasis'
+};
+
+app.get('/cities/:name', function (request, response) {
+    	var cityInfo = cities[request.params.name];
+			if (cityInfo) {
+        response.json(cityInfo);
+      } else {
+        response.status(404).json("City not found");
+      }
+});
+
+
+--------------------------------------------------------------------------
+Express middleware to intercept dynamic parameters. The below extends the 
+request with 'normName' key.
+
+// Express normalize the dynamic parameter.
+app.param('name', function(request,response, next) {
+  var name = request.params.name;
+  var normName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+  request.normName = normName;
+  next();
+});
+
+ 
+
+--------------------------------------------------------------------------
+Example of a POST
+
+CLIENT:
+
+HTML (list of cities and a form to add new cities). Having a name attribute for each input is required. Otherwise stuff is not submitted.
+
+	  <ul class="city-list"></ul>
+
+	  <form class="addCityForm">
+	    <legend>New city</legend>
+	    <input name="name" placeholder="Name"><br>
+	    <input name="description" placeholder="Description">
+	    <input type="Submit">
+	  </form>
+	</body>
+
+
+JQUERY (add to html list, GET all cities from server and POST new city to server). The last has a done method handling the response from the server (adding the new city to the list).
+
+      var cityList = [];
+
+      function appendToCityList(blocks) {
+        for (var i in blocks) {
+          var block = blocks[i];
+          var content = '<a href="/cities/' + block + '">' + block + '</a';
+          var element = $('<li>').html(content);
+          cityList.push(element);
+        }
+        $('.city-list').append(cityList);
+      }
+
+      $.get('/cities', appendToCityList);
+
+      // Need nodes body-parser library
+      $('.addCityForm').on('submit', function(event) {
+        event.preventDefault();
+        var form = $(this);
+        var blockData = form.serialize();
+        $.ajax({
+          type: 'POST',
+          url: '/cities',
+          data: blockData
+        }).done(function(blockName) {
+          appendToCityList([blockName]);
+          form.trigger('reset');
+        });
+      });
+
+
+
+SERVER (handle cities GET request, handle cities/__name__ (dynamic) request and handle POST to /cities url. This last will respond with newly created city to the client.
+
+
+
+	var cities = {
+	  'Lotopia': 'Rough and mountainous',
+	  'Caspiana': 'Sky-top island',
+	  'Indigo': 'Vibrant and thriving',
+	  'Paradise': 'Lush, green plantation',
+	  'Flotilla': 'Bustling urban oasis'
+	};
+
+	app.get('/cities', function(req, res) {
+	  res.json(Object.keys(cities));
+	});
+
+
+
+	// Express normalize the dynamic parameter. The normalized param is now part of
+	// the request (not the request.params).
+	app.param('name', function(request,response, next) {
+	  var name = request.params.name;
+	  var normName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+	  request.normName = normName;
+	  next();
+	});
+
+	// Dynamic parameters. The app.param method is normalizing and creating
+	// request.normName from the request.params.name.
+	app.get('/cities/:name', function (request, response) {
+	//      var name = request.params.name;
+	//      var normName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+	//      var cityInfo = cities[normName];
+	      var cityInfo = cities[request.normName];
+				if (cityInfo) {
+		response.json(cityInfo);
+	      } else {
+		response.status(404).json("City not found");
+	      }
+	});
+
+
+	// Routes can take multiple argument that are executes sequentially.
+	// ParseUrlencoded function will run first, then the anonymous.
+	app.post('/cities', parseUrlencoded, function(request, response) {
+	  // Here form data is available in the request.body obj.
+	  var newCity = request.body;
+	  // Each element in the form becomes a property in the object.
+	  cities[newCity.name] = newCity.description;
+
+	  // 201 - The request has been fulfilled and resulted in a new resource being created
+	  response.status(201).json(newCity.name);
+	});
+
+--------------------------------------------------------------------------
+Example of DELETE
+
+CLIENT
+
+      function appendToCityList(blocks) {
+        for (var i in blocks) {
+          var block = blocks[i];
+
+             // HERE A DELETE LINK IS ADDED------------------------->>>>>>
+          var content = '<a href="#" data-foo="knut" data-bloock="' + block + '">delete </a>' + '<a href="/cities/' + block + '">' + block + '</a';
+          var element = $('<li>').html(content);
+          cityList.push(element);
+        }
+        $('.city-list').append(cityList);
+      }
+
+      $.get('/cities', appendToCityList);
+
+
+
+
+
+
+      $('.city-list').on('click', 'a[data-bloock]', function(event) {
+        if (!confirm('Are you sure?')) {
+          return false;
+        }
+
+//        var target = $(this);
+        var target = $(event.currentTarget);
+
+        $.ajax({
+          type: 'DELETE',
+          url: '/cities/' + target.data('bloock'),
+        }).done(function() {
+          target.parent('li').remove();
+        });
+
+        console.log(target);
+      });
+
+
+SERVER
+
+app.delete('/cities/:name', function(request, response) {
+  console.log("delete request " + request.normName);
+  delete cities[request.normName];
+  response.sendStatus(200); // Set the response body to OK
+  console.log(cities);
+});
+
+--------------------------------------------------------------------------
+
+USING ROUTE INSTANCES
+
+app.route('/cities')
+  .get(function(req, res) {
+    res.json(Object.keys(cities));
+  })
+  .post(parseUrlencoded, function(request, response) {
+    // Here form data is available in the request.body obj.
+    var newCity = request.body;
+    // Each element in the form becomes a property in the object.
+    cities[newCity.name] = newCity.description;
+
+    // 201 - The request has been fulfilled and resulted in a new resource being created
+    response.status(201).json(newCity.name);
+
+  });
+
+// Dynamic parameters. The app.param method is normalizing and creating
+// request.normName from the request.params.name.
+app.route('/cities/:name')
+  .get(function(request, response) {
+    //      var name = request.params.name;
+    //      var normName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+    //      var cityInfo = cities[normName];
+    var cityInfo = cities[request.normName];
+    if (cityInfo) {
+      response.json(cityInfo);
+    } else {
+      response.status(404).json("City not found");
+    }
+
+  })
+  .delete(function(request, response) {
+    console.log("delete request " + request.normName);
+    delete cities[request.normName];
+    response.sendStatus(200); // Set the response body to OK
+    console.log(cities);
+  });
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+

@@ -1,0 +1,248 @@
+https://regex101.com/#javascript
+Same as above but more for ruby : http://rubular.com/
+http://www.learnpython.org/en/Regular_Expressions
+http://eloquentjavascript.net/09_regexp.html
+Within db's : https://www.safaribooksonline.com/library/view/oracle-regular-expressions/0596006012/
+
+subject
+regexp
+
+
+Or operator |
+
+Pattern inbetween //
+/234|234/
+/boat|ship/
+
+
+Prev char one or more times, the plus operator.
+/ar+/ matches ar, arr, arrr ...
+basically the same as ->
+/ar|arr|arrr|arrrr/ using or operator
+
+
+
+/a|b|c|d....|z/
+Character sets, represents one character in subject set.
+[a-z]
+range only works in character sets and repr only one subject char.
+[a-z]+
+the above matches any consequtive words
+
+Capital letters (modifier (case Insensitive after last slash)
+[a-zA-Z]+ or [a-z]+/i
+
+
+
+
+Spaces
+\s matches space, tab, newline
+/[a-z\s]+/i matches Captain hook
+/[\sa-z]/+i is same as above.
+
+
+
+
+Numbers
+[a-z0-9\s]+/i matches letters, numbers and white space
+
+
+
+
+'Word character' (\w)
+'Word character' can be matched as [a-zA-Z0-9] = [a-z0-9]/i = [\w]
+'One word character' \w
+'Many word characters' \w+
+
+
+
+emails
+sara@example.com
+sara@example!com
+/\w+@\w+.\w+/
+
+
+dot character matches everything except newline. (wild card)
+to match a real dot us \.
+
+sara@example.com
+/\w+@\w+\.\w+/
+
+
+
+
+questionmark, preceeding character optional
+battle axe
+splitting axe
+pickaxe
+(battle|splitting|pick) ?axe
+
+
+sara@example.com
+net
+org
+edu
+/\w+@\w+\.com|net|org|edu/i
+
+sara@example.com using group
+sara@example.com
+sara@example.comsdfsdf
+/\w+@\w+\.(com|net|org|edu)/i
+
+
+
+
+anchors
+^ starts with
+$ ends with
+sara@example.com
+/^\w+@\w+\.(com|net|org|edu)$/i
+
+
+http://www.twitter.com/plurals
+http://www.twitter.com/codes
+
+http:\/\/www\.twitter\.com\/\w+
+
+
+
+New Zeeland
+New Guinea
+Newfounland
+^new[a-z\s]+
+
+
+
+word boundary meta character \b
+/b\w+\b
+
+
+match different version
+lame way \bok\b|\bokey\b
+good way \bok(ey)?\b
+
+example : "pirate ship and pirate boat".match(/\bpirate\s(ship)?\b/ig)
+
+
+Group ensures boundary is applied to each answer:
+"why sure, i can go ensure code is good".match(/\b(ok(ay)|sure)/ig)
+---> only matches sure
+
+
+
+Matching decimal numbers, both neg and pos.
+-90.345
+34.23
+34.0
+-?[0-9]+\.[0-9]+
+-?\d{1,3}\.\d+  Same as above but between 1 and 3 digits before decimal point
+
+Matching both http/https and com/org
+https?:\/\/(www\.)?twitter\.(com|org)\/codeschool
+
+
+Match anything that is not a number
+"work like a captain, play like a pirate".match(/[a-z\s,]+/ig)
+"work like a captain, play like a pirate".match(/[^\d]+/ig)
+
+Match numbers
+[0-9] = \d
+
+[^abcde] does not match a or b or c or d or e
+
+[^\d] anything not a numbers
+[^\d] = \D
+
+[^\s] anything not white spaces
+[^\s] = \S
+
+[^\w] anything not words
+[^\w] = \W
+
+
+
+
+Matching a specific amount
+[a-z]{2} matches two characters
+[a-z]{1,3} matches between 1 to 3 characters
+[a-z]{20,} matches a minimum of 20
+
+
+
+Matching words that do not contain any wovels
+"The rougher the seas, the smthr we sail".match(/\b[^aeiouy\s]+\b/g)
+--->smthr
+
+
+
+Matching not a number
+[^\d]+
+\D+
+[^0-9]+
+[^0123456789]+
+
+
+
+
+Match a word with between 3 and 10 exclamation marks at the end of the sentence.
+\w+!{3,10}$
+
+
+
+Interval expression
+\w* = \w{0,}
+\w+ = \w{1,}
+
+
+
+Multiline modifier
+/'pattern'/m
+This makes anchors (^ and $) to each line instead of spanning multi lines.
+
+How to match peter in a multiline text and the end of a line.
+"Hi there peter.\n Do you feel good peter\n Yeah peter is ok".match(/peter$/gm)
+-->one match, the middle one
+
+
+/ ^(new|north|south|west|rhode)?\s?\w+$ /igm
+Matches all these ->
+Alabama
+Florida
+Maine
+Maryland
+New Jersey
+North Carolina
+Ohio
+Oklahoma
+Oregon
+Pennsylvania
+Rhode Island
+South Dakota
+West Virginia
+Wyoming
+
+
+
+Capturing Groups
+
+"learnbydoing something".match(/(learn((by)doing))/)
+Returns three groups ->
+["learnbydoing", "learnbydoing", "bydoing", "by"]
+
+
+No capturing, but still using groups ?:
+(?:)
+
+Example of getting the 'blue'
+"sailing the great blue seas".match(/sailing the great (\w+) seas/)[1]
+
+
+Example of capturing all three types of fish and returning the whole fish name
+but not the first part if the fish (?:)
+((?:sword|flat|blow)fish)
+
+
+https://en.wikipedia.org/wiki/Machine-readable_passport
+capturing coutry (3 letters), date of birth (6 letters) and gender (1 character)
+\d{9}\d([A-Z]{3})(\d{6})\d([a-z])\d{23}
+        --------  -----    -----

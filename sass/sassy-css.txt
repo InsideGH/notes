@@ -1,0 +1,210 @@
+variables in scss
+
+  $button-bgcolor: #00A0D6;
+  $button-textcolor: #FFFFFF;
+
+default (re-set value)
+
+  $var: 5px;
+
+  @import "buttons"; // <--- inside here "$var: 3px !default" - if a value isn't defined somewhere else, use 3px.
+
+  var will be 5 px here.
+
+
+Types
+  booleans
+  number with or without units
+  colors in all formats
+  strings with or without quotes
+  list, either comma or space separated.
+  null.
+
+
+Scope. A redeclaration of a global variable in a local scope changes the global variable.
+
+Shimming. 
+
+  $side: top;
+
+  sup {
+    position: relative;
+    #{$side}: 0.5em;
+  }
+
+  $border-side: left;
+
+  .girder {
+    border-#{$border-side}: 4px solid #ccc;
+    h2 {
+      font-size: 24px;
+    }
+  }
+
+
+Mixin (to avoid repetitions in css). Mixin must be declared before usage.
+  $mixin button {
+  ...
+  }
+
+  .btn-a {
+    @include button;
+  }
+
+
+Example : 
+
+
+@mixin assemble($side, $bg: #fff, $pad: 10px) {
+  background: $bg;
+  border-#{$side}: 1px solid #ccc;
+  padding: $pad;
+}
+
+.factory {
+  @include assemble(left);
+}
+.highrise {
+  @include assemble(right, $bg: #797979, $pad: 20px);
+}
+
+
+Example2:
+
+@mixin modal($shadow...) {
+  box-shadow: $shadow;
+  border: 1px solid #ccc;
+}
+
+.modal {
+  @include modal(inset 0 0 5px #000, 0 2px 5px #000);
+}
+
+
+Extending, example:
+
+.socket {
+  border-radius: 50%;
+  padding: 15px;
+  width: 30px;
+}
+.wrench {
+  @extend .socket;
+  width: 100px;
+}
+.bolt {
+  @extend .socket;
+  padding: 14px;
+}
+
+
+placeholder (so that it can't be added as a class). Example:
+
+%group {
+  zoom: 1;
+  &:before,
+  &:after {
+    content: '';
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.factory {
+  @extend %group;
+  background: #fff;
+}
+
+
+
+THIS ->
+
+.blueprint {
+  background: blue;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+.surveyor {
+  @extend .blueprint;
+  color: #fff;
+}
+
+.factory {
+  background: #fff;
+  .blueprint {
+    margin-bottom: 20px;
+  }
+}
+
+GETS THIS ->
+
+.blueprint, .surveyor {
+  background: blue;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.surveyor {
+  color: #fff;
+}
+
+.factory {
+  background: #fff;
+}
+.factory .blueprint, .factory .surveyor {
+  margin-bottom: 20px;
+}
+
+
+BUT WITH PLACEHOLDER : 
+
+%container {
+  background: blue;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.blueprint {
+  @extend %container;
+}
+.surveyor {
+  @extend %container;
+  color: #fff;
+}
+
+.factory {
+  @extend %container;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+RESULTS IN THIS ->
+
+.blueprint, .surveyor, .factory {
+  background: blue;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 10px; 
+}
+
+.surveyor {
+  color: #fff; 
+}
+
+.factory {
+  background: #fff;
+  margin-bottom: 20px; 
+}
+
+
+INDENTING SASS :
+
+Remove {};
+Replace @mixin with =
+Replace @include with +
+

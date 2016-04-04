@@ -1,0 +1,205 @@
+http://www.pearsonified.com/typography/
+http://www.smashingmagazine.com/category/design/
+http://www.creativebloq.com/net-magazine
+http://hackdesign.org/
+http://www.thinkingwithtype.com/
+http://www.amazon.com/Elements-Typographic-Style-Robert-Bringhurst/dp/0881792063
+http://www.pearsonified.com/typography/
+http://www.smashingmagazine.com/2010/01/color-theory-for-designers-part-1-the-meaning-of-color/
+https://color.adobe.com/create/color-wheel/
+http://www.workwithcolor.com/color-converter-01.htm
+http://webdesign.tutsplus.com/articles/understanding-the-z-layout-in-web-design--webdesign-28
+http://webdesign.tutsplus.com/articles/understanding-the-f-layout-in-web-design--webdesign-687
+http://gridpak.com/
+http://www.ravelrumba.com/photoshop-grids/
+
+
+* Content is king
+* Design must reflect spirit of content.
+* Font - change it a lot or not.
+
+* Attribute that influence design
+    Audience (age, race, culture...)
+    Tone (casual, formal ...)
+    Purpose (information or conversion)
+
+* Typography.
+  
+  Headline text
+
+  B-Headline
+
+  Nav item | Nav item
+
+  Body copy Body copy Body copy Body copy Body copy
+  Body copy Body copy Body copy Body copy Body copy
+
+  Byline text.
+
+
+* Fonts
+  Classification
+    Serif - little "winkles" at the edges.
+    Style/Types
+      Humanist serif - Classic style, Journalism or historical.
+      Transitional serif - Strong/Stylish, Academia and legal.
+      Modern serif - Structured/Clear, Art and culture.
+      Egyptian/Slab serif - Heavy, Marketing and promotion.
+
+    Sans-serif - without serif
+    Style/Types
+      Humanist sans serif - Tension, Goverment and educational or finance.
+      Transitional sans serif - Modern feel, Technology and transportation.
+      Geometric sans serif - Strict/objective - Science or architecture.
+
+    Script
+      Use little.
+
+
+* Mixing
+  Don't choose two fonts from the same style/type (for example style/type=Humanist Serif) Garamond and Epic)
+  Don't choose two fonts from the same class (for example (class=Serif) epic humanist and Agora slab).
+
+  Mix from different classes
+    Example : Humanist serif (epic) + Humanist sans-serif (Myriad/Cabin/"Droid sans"/"Open Sans")
+    Example : (same maker) Transitional serif (perpetua) + Humanist sans-serif (Gill Sans)
+
+    Example : Transitional sans serif Helvetica
+    Example : Transitional "Times New Roman"/Droid/Lora/Poly serif 
+
+  Lato/Helvetica - transitional sans-serif
+  New Times Roman - transitional serif
+
+  "Sorts Mill Goudy"/Palatino - Humanist serif
+  Cabin - Humanist sans-serif
+
+
+
+
+
+
+* Sizing
+  Large elements draw attention and then to smaller elements to help digest content.
+  
+  Sea of text, avoid.
+    Take first row/sentece and make headline, allows user to latch onto.
+
+  Howto
+    1) Start with body copy (16 px)
+    2) HeadLine (200-300% of body copy)
+    3) B-Head (150%)
+    4) Nav (100%)
+    5) Bi-line (2-4 px smaller, 75%)
+
+* Leading
+  Amount of space between lines (base to base).
+  Good leading is 120%-150% of body copy size.
+  css.line-height: 1.5
+
+* Bold/italics (less is more).
+
+* Line width
+  Measured in cpl (characters per line) 50-70 / line is ideal (inc spaces)
+
+  widow  - single word in line
+  orphan - single line on page
+
+
+** Color
+  Two types : can touch (substractive color) and can't touch (additive color).
+
+  substractive color
+    controlled using cmyk space. All colors mixed -> black.
+
+  additive color
+    controlled using rgb space. All colors mixed -> white.
+
+  humans process colors
+    hsl (Hue Saturation lightness)
+    Hue
+      Best visualized on color wheel. Start at 0 (red), 120 (green), 240 (blue)
+    Saturation
+      Difference between color and grey. (0% gray 100% vibrant)
+    Lightness
+      Amount of light in a color (0% black, 50% most vibrant, 100% white)
+
+    (Photoshop etc might not use lightness but instead brightness) Brightness
+    goes from (0) black to (100) vibrant and does not reach white.
+    
+
+
+  Color scheme (4-5 colors)
+    Button, text, backgrounds.
+    1) Choose base color, different colors create different moods.
+       Red - heat, passion, excitment, grabs attention. energy.
+       Orange - warmth and vitality. Reliability and playfulness.
+       Yellow - Optimism, creativity. Sunshine and cheer happines.
+       Green - Serenity, health. Growth, nature and freshness.
+       Blue - Security, Truth, Stablity. Loyalty, Reliability and open communication.
+       Purple - Spirituality, Intelligence, Wealth. 
+                or sentimental, creative, sofiticated.
+       Pink - Youthful intencity. Energy fun and excitment.
+       Brown - Durability, class. Age, stability, relaxation.
+       Black - Power, drama. Serious bold and strong.
+       White - Simplicity, cleanliness. 
+
+    2) Build upon base color
+       2.1 Monochromatic (same hue - vary in saturation and lightness)
+       2.2 Analogous (desc and asc hue - vary in saturation and lightness)
+           max 60 deg on either side difference (30deg per step with 2 steps)
+       2.3 Complementary (opposite hue - vary in saturation and lightness)
+           Same hue on left, opposite on right side.
+
+
+Color and Type
+  Important to have high contrast (difference in color).
+  WCAG2 (Web Content Accessibility Guidelines)
+    
+   Black- white are best
+   Same hue, high sat and light contrast - second best.
+  
+   Difficult: red+green and blue+orange
+   
+   colors are naturally values
+     yellow light.
+     blue darker.
+   mixing these with opposite values (dark yellow + light blue) is not good.
+
+
+   warm and cold colors, not to be used as contract but DEPTH.
+     warm (red orange yellow)
+     cold (green blue purple)
+
+   warm closer to user than blue. Use cool colors in bg and warm in foreground.
+
+
+  Skip drop shadows...
+
+
+
+
+
+
+
+Layout
+
+  Visual Hierarchy
+  Read top/left -> bottom/right.
+    Logo upper left corner.
+    Nav horizontal or vertical. If many nav items, use vertical.
+    Vertical nav is not used so much.
+    Use dropdowns or flyouts.
+      Main content
+        Under horizontal nav/logo
+        Next to vertical nav but under logo.
+
+      Secondary content, smaller
+        on side, or breaked up and under main content.
+      Footer with quick access information. Always span whole page width.
+    
+  Grid System
+    Horisontal aligned with line height.
+    Vertical with gutters between to separate content.
+    
+    Fixed vs fluid grid.
+     
