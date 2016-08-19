@@ -1,0 +1,43 @@
+Get system info
+  curl localhost:9200/_nodes/stats/process?pretty
+  or
+  Des.max-open-files true
+
+
+Control mmap
+  sysctl -w vm.max_map_count=262144
+
+
+Swapping
+  1) disable it
+    sudo swapoff -a
+    or to disable it permanently edit /etc/fstab and comment
+    out all swap lines.
+  2) set the sysctl value vm.swappiness = 0. This will reduce
+    the kernels swappiness.
+  3) lock adress space
+    in the config/elasticsearch.yml
+      bootstrap.mlockall: true
+
+  Check mlockall : curl http://localhost:9200/_nodes/process?pretty
+  failed?
+    Run as root : ulimit -l unlimited before starting elastic
+  or
+    fix that tmp directory is mounted with noexec, by starting with
+    ./bin/elasticsearch -Djna.tmpdir=/path/to/new/dir
+
+
+Configuration files
+  /config/elasticsearch.yml
+  /config/logging.yml
+
+Data
+  /data
+
+Upgrading
+  1) Always snapshot
+  2) Rolling updates (one node at a time in a cluster)
+     Disable sharding, stop node, upgrade, start node, enable sharding wait for health/recover
+
+
+  During major elastic search upgrades a full cluster restart is required

@@ -1,0 +1,21 @@
+Can specify document version
+  /1?version=2
+
+Can specify op_type
+  Force a create
+    curl -XPUT 'http://localhost:9200/twitter/tweet/1?op_type=create' -d '
+    or
+    curl -XPUT 'http://localhost:9200/twitter/tweet/1/_create' -d '
+
+
+DOCUMENT API
+
+  Can set timeout on request.
+    curl -XPUT 'http://localhost:9200/twitter/tweet/1?timeout=5m'
+
+  Get the _source
+    curl -XGET 'http://localhost:9200/twitter/tweet/1/_source?_source_include=*.id&_source_exclude=entities'
+
+  Delete
+    curl -XDELETE 'http://localhost:9200/twitter/tweet/1'
+  

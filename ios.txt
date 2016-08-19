@@ -1,0 +1,415 @@
+WrapUp
+
+developer.apple.com
+Dash
+Swift.org
+nsscreencast (9$/month)
+raywenderlich
+iosbytes.codeschool.com
+
+
+INTRO
+
+  SWIFT
+    "This is a \(variable) string with variable"
+
+    guard let product = product, let name = product.name else {
+      return
+    }
+
+    NSObject - base class.
+
+    viewDidLoad/viewWillAppear
+
+    return ordersInCart.count ?? 0
+
+  SAVE TO DISK
+    *NSCODING
+      class Orders: NSObject, NSCoding {
+      required init?(coder aDecoder: NSCoder) {
+      self.orders = aDecoder.decodeObjectForKey("orders") as? [Order]
+      }
+    *Core Data
+    * tableView.reloadData()
+    
+
+  UIKIT
+    Has template (text, images, buttons...)
+
+  XCODE
+    Apple, free.
+    Single view app
+
+    CMD-D - duplicate
+    ALl subviews attached to main controller views can be 'weak'
+
+  Settings
+    com.sony.[name]
+    iphone (not universal)
+    (not) Code data, unit/ui test
+    Save on desktop
+
+  Storyboard
+    layout screens as scenes (can create new scenes - by dragging a "xxx" view controller)
+    connect scenes flow between different screens.
+
+  Scene
+    has view controller (manages one main view).
+    Use the inspector panel to adjust view properties.
+
+
+
+VIEWS
+
+  Drag view controller -> storyboard.
+    Set 'Is initial view controller' in the "inspection panel".
+    Unset "Use Size classes" to make things easier during learning. First page in inspector
+    Set "Simulate metrics" size to 4.7 inch (iphone6) (default is 4 inch)
+
+  Subviews
+    Buttons, label, imageview etc.
+
+  XCODE assets
+    Each xcode project gets an Assets.xcassets folder. Put assets there.
+    Add assets by pressing + in bottom left and then "import...".
+
+  ImageView
+    All images in assets folder are available.
+    Choose Editor->"Size to Fit content".
+
+  Order of views
+    Change order of subviews in the View Controller Scene to change drawing order.
+
+  Button
+    Can set own bitmap.
+
+
+
+CONNECT VIEWS AND CODE (change view programatically using outlets)
+
+  Controller -> View (on events)
+  View -> Controller (on interaction)
+
+  Create Swift file
+    Right click top folder and New File...
+    Cocoa Touch Class
+    Class :ProductViewController
+    Subclass: UIViewController
+    "Next"
+    Where to save (default ok)
+
+  File template
+    Don't need didReceiveMemoryWarning and "navigation".
+
+  ***Make a connection between storyboard and Swift file (in xcode)
+    Connect the ProductViewController with the View controller object in the story board.
+      Storyboard, click View Controller, 3rd page in inspector panel and set Class to ProductViewController.
+        Result: Scene navigator in XCODE updates to show Product View controller instead of just View Controller.
+
+  ***Outlet (using the assistant editor mode)
+    All of the subviews need to be manually connected.
+    Connection between storyboard object and swift variable.
+    1) Create outlet in the storyboard.
+    2) Link the variable in the swift file to the outlet.
+    3) IMPORTANT: The line where the variable appears in displays a darkened dot!
+
+    - Click label in the "scene editor, then ctrl click and drag into the swift file.
+    - Helper pops up (Leave Connection as Outlet)
+      - Name (var in the swift file, productNameLabel, type UiLabel, Weak storage)
+      - @IBoutlet weak var productNameLabel: UILabel!
+
+    - App startup
+      - AppDelegate.swift runs UIApplicationMain()
+      - Info.plist(hold the name of storyboard) loads storyboard
+      - Storyboard loads view controller
+      - View controller loads view
+      - View run viewDidLoad() function.
+      - productNameLabel.text = "nisse"
+
+      -productImageView.image = UIImage(named: "phone-fullscreen");
+        - Expects an UIImage obj.
+        - The above run the initializer function (init) which returns a UIImage object.
+        - https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#//apple_ref/occ/clm/UIImage/imageNamed:
+        -
+
+BUTTON ACTION TO SWIFT FUNCTION (using actions (from view to controller))
+  -Select button in scene editor and ctrl drag.
+  - Helper pops up (change Connection to Action)
+  - Name: addToCardPressed, Type: AnyObject, Event: TouchUpInside, Arguments: sender.
+  - IBAction func addToCardPressed(sender: AnyObject) -> Void {
+      print("Button tapped")
+    }
+  - Does not return any values.
+
+
+SCROLLVIEW
+  A UIScrollView manages the scrolling of all its subviews.
+  - Create a new view controller.
+    - Set XCODE to "standard editor" (first icon up at right)
+    - Search for view controller
+    - Drag it to the storyboard. Make it fullscreen in main view.
+    - The in attributes panel metrics size 4.7
+    - Put stuff into the scroll view.
+    -
+
+Label
+  - Multiline? Set number of lines to 0.
+
+  No room in the scrollview?
+    - Move the scroll view object out from the view controller folder to below.
+    - Now it's part of the Contact "View Controller Scene", but not the "Contact View Controller"
+    - Now its still in the story board editor but has a "locked in extra view above".
+    - Select it, and select the inspector panels 5 page.
+    - Change the height from 667 (iphone6) to 800.
+    - Add stuff...
+    - Set back the height to 667.
+
+  Create outlet
+    - ctrl drag from ScrollView in Scene editor down to the swift file.
+
+  Make the Contact View Controller the initial page.
+    - Check the "Is Initial View Controller"
+
+  Add the scroll view to the ContactViewController
+    override func viewDidLoad() {
+      super.viewDidLoad()
+      view.addSubview(scrollView)
+    }
+
+  Make it scroll
+    Set the content size of the scroll view
+
+    override func viewWillLayoutSubviews() {
+      super.viewWillLayoutSubviews()
+      // Any time you change the size of a subview, do it here.
+      scrollView.contentSize = CGSuzeMake(375, 800)
+    }
+
+
+TABLE VIEWS
+  Has a Table View Controller instead of Normal View Controller.
+  View Controller               Table View Controller
+        |                                 |
+    Main View                         Table View
+        |                             |       |
+    Scroll View                 Table cell   Table cell
+    |       |                   |
+    Labels  Image Views         Own stuff
+
+  Standard editor. Create a new Scene by dragging a Table view controller onto
+  the story board. Set size 4.7". Make it initial view controller.
+
+  Create new file, Cocoa Touch Class. Name ProductsTableViewController. Subclass UiTableViewController. Hit Next, save it in project folder.
+  Delete boiler code.
+
+  Back in the story board, select the Table View Controller, in the class inspector,
+  set class to ProductsTableViewController.
+
+  .Table View
+    .Table View Cell (Prototype cells)(select this), then in the attributes panel set "Identifier" to "ProductCell"
+
+    ProductsTableViewController.swift
+      class ProductsTableViewController: UITableViewController {
+
+        // Has access to table specific functions.
+          Set the number of rows
+            override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+              return 5;
+            }
+
+          Create on cell for each row (runs number of times above returns.)
+            override func tableView(tableView: UITableView, cellForRowAtIndexPatch indexPath: NSIndexPath) -> UITableViewCell {
+              let cell = tableView.dequeueReusableCellWithIdentifier("ProductCell", forIndexPath: indexPath)
+              return cell
+            }
+      }
+
+  Click Table View, Change Style to "grouped".
+    Now the prototype cells look different (isolated with grey around it)
+
+
+  PUT STUFF INTO TABLE VIEWS
+    Tabel view cells comes with preloaded subviews.
+
+    Table View
+      Table cell
+        content view
+          Image view | textLabel
+
+          override func tableView(tableView: UITableView, cellForRowAtIndexPatch indexPath: NSIndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCellWithIdentifier("ProductCell", forIndexPath: indexPath)
+
+            // The textLabel can be missing.
+            // cell.textLabel.text = "hello friend"
+
+            // Opt1
+            if cell.textLabel != nil {
+              cell.textLabel.text = "hello friend"
+            }
+            // Opt2
+            cell.textLabel?.text = "hello friend"
+
+            cell.imageView?.image = UIImage(named: "image-cell1")
+            return cell
+          }
+
+    Adjust the table view cell height in XCODE. This is done by modifying the prototype cells.
+
+
+  NAVIGATION
+    Navigation Controller manages moving between view controllers.
+
+    The view controllers must be part of a navigation controller stack.
+
+    One View controller as the root for the navigation stack.
+
+    Segway (seque).
+
+    How?
+      Select the view controller. Editor->Embed In->Navigation Controller.
+
+    Then click the prototype cells and drag to the product View Controller. In the
+    Segway popup helper select push.
+
+    Click the segway and name it ("ShowProduct")
+
+    PASSING DATA
+      Every view controller has
+        prepareForSeque() <--override this and set the ProductName. In the receiver
+                             add a property in that view controller to store the value.
+
+      1)
+        class ProductViewController: UIViewController {
+          var productName: String? //Optional since we don't know value yet.
+
+          override func viewDidLoad() {
+            super.viewDidLoad()
+            productNameLabel.text = productName
+          }
+        }
+
+      2)
+        class ProductsTableViewController: UITableViewController {
+          override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+            // This runs every time a segue is triggered by an action
+            if segue.identifier == "ShowProduct" {
+
+              // This will not compile, can't be sure it's castable.
+              let productVC = segue.destinationViewController as ProductViewController
+
+              // Add optional to it.
+              let productVC = segue.destinationViewController as? ProductViewController
+              productVC?.productName = "Really old phone"
+            }
+          }
+        }
+
+
+  DYNAMIC DATA IN CELLS
+    class ProductsTableViewController: UITableViewController {
+      var productNames: [String]?
+
+      override func viewDidLoad() {
+        super.viewDidLoad()
+        productNames = ["", ""]
+      }
+
+      override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let pNames = productNames {
+          return pNames.count
+        }
+        return 0
+      }
+
+      override func tableView(tableView: UITableView, cellForRowAtIndexPatch indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("ProductCell", forIndexPath: indexPath)
+
+        let productName = productNames?[indexPath.row]
+        if let pName = productName {
+          cell.textLabel=.text = pName
+        }
+        return cell
+      }
+
+    }
+
+  DYNAMIC DATA DURING TRANSITION
+  class ProductsTableViewController: UITableViewController {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+
+      if segue.identifier == "ShowProduct" {
+        let productVC = segue.destinationViewController as? ProductViewController
+
+        if let cell = cell as? UITableViewCell {
+          if let indexPath = tableView.indexPathForCell(cell) {
+            productVC?.productName = productNames?[indexPath.row]
+          }
+        }
+      }
+    }
+  }
+
+  Version with guard
+
+  class ProductsTableViewController: UITableViewController {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+
+      if segue.identifier == "ShowProduct" {
+        let productVC = segue.destinationViewController as? ProductViewController
+
+        guard let cell = cell as? UITableViewCell,
+              let indexPath = tableView.indexPathForCell(cell) {
+          return // stop if cell or indexPath doesn't exist
+        }
+
+        productVC?.productName = productNames?[indexPath.row]
+      }
+    }
+  }
+
+  CUSTOM DATA CLASSES
+  Create empty swift file/class.
+
+    class Product {
+      var name: String?
+      var productImage: String?
+      var cellImage: String?
+    }
+
+
+    class ProductsTableViewController: UITableViewController {
+      var products: [Product]?
+
+      override func viewDidLoad() {
+        super.viewDidLoad()
+        let prod1 = Product()
+        let prod2 = Product()
+        let prod3 = Product()
+        let prod4 = Product()
+
+        prod1.name = ""
+        prod1.productImage = ""
+        prod1.cellImage = ""
+        products = [prod1, prod2, prod3, prod4]
+      }
+
+      // Update all of the rest ....
+      ...
+    }
+
+
+    class ProductViewController: UIViewController {
+      var product: Product?
+
+      override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if let p = product {
+          productNameLabel.text = p.name
+          if let i = p.productImage {
+            productImageView.image = UIImage(named: i)
+          }
+        }
+
+      }
+    }

@@ -1,0 +1,419 @@
+React router
+egghead  - react fundamentals
+youtube - react in 15ish minutes
+react doc
+
+
+DIFF POLYMER
+  With JSX you can write JS mixed with HTML. Need to place inside {}
+  In Polymer, you need to have data bindings {{}} or {{{}}} or [[]].
+
+  Example: javascript map function to creates a JSX array
+  ["a", "b", "c"] -->
+  [<li>a</li>, <li>b</li>, <li>c</li>]
+
+  Does get messy with all the {} in react.
+
+  Good practice to pass a unique key attr to all components.
+
+  In Polymer, all elements with ids are accessable through this.$.nisse. Dynamic
+  elements are available through selector this.$$. In react ->
+    <input placeholder="Name:" ref={(input) => {this._author = input}} />
+
+  Use concat instead of push to make react fast.
+
+  One-way control flex-flow
+    Parent passes functions through props to children.
+    Parent passes author/body through props to children.
+
+    Child calls callback.
+
+
+
+Component - call render generates virtualdom. (step1)
+
+virtualdoom - in-memory repr.
+
+step2 - display in browser through diffing.
+
+diffing - only the least area updates.
+
+COMPONENT
+  Must inherit from React.Component
+  Must have render func that returns jsx markup code.
+  JSX - no quotes needed.
+  functions with _ are custom (not react)
+
+RENDERER
+  ReactDOM.render
+    Classname param1.
+    ReactDOM.render(<StoryBox />, document.getElementById('story-app'))
+  Takes output from react component and add to the DOM.
+
+RESOURCES
+  script : react.js, react-dom.js, babel.js (es6, jsx)
+  script type="text/babel" src="components.js"
+
+
+------
+  class RobotBox extends React.Component {
+    render() {
+      return <div>Hello From React</div>
+    }
+  }
+  let target = document.getElementById('robot-app');
+  ReactDOM.render( <RobotBox/>, target);
+------
+
+JSX
+  Lower case = HTML elements
+  Upper CamelCase = React component
+
+  render() {
+    return <div>Hello From React</div>
+  }
+  --->
+  render() {
+    return React.createElement('div', null, 'Story Box');
+  }
+
+  The word 'class' is reserved in JS, thus use className
+  instead
+
+    <div>
+      <h3>Bla</h3>
+      <p className="lead">bla</p>
+    </div>
+    --->
+    return React.createElement('div', null,
+            React.createElement('h3', null, "Bla"),
+            React.createElement('p', null, "bla"));
+
+
+  -----
+    class RobotTime extends React.Component {
+    render() {
+    	let pi = Math.PI;
+      return (
+        <div className="is-tasty-pie"  >
+          The value of PI is approximately {pi}.
+        </div>
+      );
+    }
+  }
+  -----
+  class RobotItems extends React.Component {
+    render() {
+      const topics = ["React", "JSX", "JavaScript", "Programming"];
+      return (
+        <div>
+          <h3>Topics I am interested in</h3>
+          <ul>
+            {topics.map(function(topic) {
+              return <li>{topic}</li>;
+            })}
+          </ul>
+        </div>
+      );
+    }
+  }
+  -----
+
+
+  Arguments passed to components are called 'props'. Look like HTML attr.
+    <Comment author="asdasd" body="sdflsdkfjls!"/>
+
+  To read
+    {this.props.author}
+
+
+
+  ----
+  class Comment extends React.Component {
+    render() {
+      return  <div className="comment">
+                <p className="comment-header">Anne Droid</p>
+                <p className="comment-body">
+                  I wanna know what love is...
+                </p>
+                <div className="comment-actions">
+                  <a href="#">Delete comment</a>
+                </div>
+              </div>
+    }
+  }
+
+---
+
+
+DYNAMIC DATA
+
+  _getComments() {
+    return commentList.map((comment) => {
+      return (<Comment author={comment.author} body={comment.body} key={comment.id}/>)
+    });
+  }
+
+  class CommentBox extends React.Component {
+    render() {
+      const comments = this._getComments();
+      return (
+        <div>
+        ...
+          {comments.length}
+          {comments} <---JSX knows howto render arrays!
+        </div>
+      )
+    }
+  }
+
+
+  -----
+    class CommentBox extends React.Component {
+    render() {
+      const comments = this._getComments() || [];
+      return(
+        <div className="comment-box">
+          <h3>Comments</h3>
+          {this._getPopularMessage(comments.length)}
+          <h4 className="comment-count">{comments.length} comments</h4>
+          <div className="comment-list">
+            {comments}
+          </div>
+        </div>
+      );
+    }
+
+    _getPopularMessage(commentCount) {
+      const POPULAR_COUNT = 10;
+
+      if (commentCount > POPULAR_COUNT) {
+        return (<div>
+    This post is getting really popular, don't miss out!
+  </div>)
+      }
+
+    }
+
+    _getComments() {
+      const commentList = [
+        { id: 1, author: 'Clu', body: 'Just say no to love!', avatarUrl: 'images/default-avatar.png' },
+        { id: 2, author: 'Anne Droid', body: 'I wanna know what love is...', avatarUrl: 'images/default-avatar.png' }
+      ];
+      return commentList.map((comment) => {
+        return <Comment author={comment.author} body={comment.body} avatarUrl={comment.avatarUrl} key={comment.id}/>
+      });
+    }
+  }
+
+  class Comment extends React.Component {
+    render() {
+      return(
+        <div className="comment">
+          <img src={this.props.avatarUrl} alt={`${this.props.author}'s picture`}/>
+          <p className="comment-header">{this.props.author}</p>
+          <p className="comment-body">
+            {this.props.body}
+          </p>
+          <div className="comment-actions">
+            <a href="#">Delete comment</a>
+          </div>
+        </div>
+      );
+    }
+  }
+-----
+
+
+STATE
+  1) jQuery, Backbone (direct dom manip)
+  2) React (indirect dom manip)
+
+  ex:
+    $('.stuff').on('click', function() {
+
+    });
+
+  ex:
+    if (this.state.showComments) {
+
+    }
+
+  ex:
+    constructor() {
+      super();
+      this.state = {
+        showComments: false
+      }
+    }
+
+    render() {
+      let nodes;
+      if (this.state.showComments) {
+        nodes = <div>....
+      }
+      return (
+        ...
+        {nodes}
+      )
+    }
+
+    // Use setState, this will trigger a re-render.
+    this.setState({showComments: true});
+    this.setState({isAbusive: !this.state.isAbusive});
+
+
+
+
+
+
+
+
+
+-------------
+class CommentBox extends React.Component {
+
+  render() {
+    const comments = this._getComments() || [];
+    return(
+      <div className="comment-box">
+        <h3>Comments</h3>
+        {this._getPopularMessage(comments.length)}
+        <h4 className="comment-count">{this._getCommentsTitle(comments.length)}</h4>
+        <div className="comment-list">
+          {comments}
+        </div>
+      </div>
+    );
+  }
+
+  _getPopularMessage(commentCount) {
+    const POPULAR_COUNT = 10;
+    if (commentCount > POPULAR_COUNT) {
+       return (
+         <div>This post is getting really popular, don't miss out!</div>
+       );
+    }
+  }
+
+  _getComments() {
+    const commentList = [
+      { id: 1, author: 'Clu', body: 'Just say no to love!', avatarUrl: 'images/default-avatar.png' },
+      { id: 2, author: 'Anne Droid', body: 'I wanna know what love is...', avatarUrl: 'images/default-avatar.png' }
+    ];
+
+    return commentList.map((comment) => {
+      return (<Comment
+               author={comment.author}
+               body={comment.body}
+               avatarUrl={comment.avatarUrl}
+               key={comment.id} />);
+    });
+  }
+
+  _getCommentsTitle(commentCount) {
+    if (commentCount === 0) {
+      return 'No comments yet';
+    } else if (commentCount === 1) {
+      return '1 comment';
+    } else {
+      return `${commentCount} comments`;
+    }
+  }
+}
+
+class Comment extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      isAbusive: false
+    };
+  }
+
+  render() {
+    let commentBody;
+    if (this.state.isAbusive) {
+      commentBody = this.props.body;
+    } else {
+      commentBody = <em>Content marked as abusive</em>;
+    }
+    return(
+      <div className="comment">
+        <img src={this.props.avatarUrl} alt={`${this.props.author}'s picture`} />
+        <p className="comment-header">{this.props.author}</p>
+        <p className="comment-body">
+          {commentBody}
+        </p>
+        <div className="comment-actions">
+          <a href="#">Delete comment</a>
+          <a onClick={this._toggleAbuse.bind(this)} href="#">Report as Abuse</a>
+        </div>
+      </div>
+    );
+  }
+
+  _toggleAbuse(event) {
+    event.preventDefault();
+    this.setState({isAbusive: !this.state.isAbusive});
+  }
+
+}
+
+-------------
+
+SYNTETIC EVENTS
+
+  Add a ref to the element (accessable after rendered)
+    <input ref={(input) => this._author = input}/>
+  React calls the function when render.
+
+  Parent -> Child (gives function)
+
+  React unifies all browser events (syntetic events)
+
+  // Both get and set (in state)
+  _getCharacterCount() {
+    this.setState({characters: this._body.value.length})
+  }
+
+
+REMOVE SERVERS
+  Set initial data to empty array []
+
+  constructor() {
+    this.state = {
+      comments = []
+    }
+  }
+
+  componentWillMount() {
+    this._fetch();
+  }
+
+  componentDidMount() {
+    // Browser dom is only updated if changed.
+    this._timer = setInterval(() => this._fetch(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._timer);
+  }
+
+  _fetch() {
+    jQuery.ajax({
+      method: 'GET',
+      url: '',
+      success: (comments) => {
+        // this is current class (arrow)
+        this.setState({comments});
+      }
+    });
+  }
+
+
+  Lifecycle
+    constructor
+    componentWillMount (rendered for the first time)
+    render
+    componentDidMount
+    componentWillUnmount

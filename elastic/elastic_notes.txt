@@ -1,0 +1,372 @@
+Elastic search
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html
+  As a service in ubuntu
+    wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+    echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
+    sudo apt-get update && sudo apt-get install elasticsearch
+    sudo update-rc.d elasticsearch defaults 95 10
+
+    sudo service elasticsearch start
+    sudo service elasticsearch stop
+
+
+  Local folder
+    curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.1/elasticsearch-2.3.1.tar.gz
+    tar -xvf elasticsearch-2.3.1.tar.gz
+    cd elasticsearch-2.3.1/bin
+    ./elasticsearch
+
+  Same JVM version must be used on all nodes and clients.
+
+
+The _cat makes json returned in pretty style.
+
+
+Reverse search (Perculator)
+  notify on specific changes (queries)
+
+NRT - 1 sec from index to avail
+
+Names
+  default cluster name : elasticsearch
+  default node name : random Marvel character
+
+Architecture
+  index: document for similar stuff (blog)
+  type: a category/partition inside a index (user, blog and comments data)
+  document : Assign a document to a index.
+
+Sharding
+  split up indexes into shards.
+  a shard can be hosted on any node in the cluster.
+    + split/scale the volume
+    + distribute for performance.
+  possible to create shard replicas (replicas)
+  NOT possible to change number of shards the index is split into.
+  possible to dynamically change number of replicas.
+
+Default sharding values
+  index
+    5 primary shards
+    1 replica
+    (which is 10 shards in total)
+
+
+Check status
+  Cluster health
+    curl 'localhost:9200/_cat/health?v'
+  Node count
+    curl 'localhost:9200/_cat/nodes?v'
+  List indexes
+    curl 'localhost:9200/_cat/indices?v'
+
+
+Create index
+  create index named customer
+    curl -XPUT 'localhost:9200/customer?pretty'
+    curl 'localhost:9200/_cat/indices?v'
+
+  The above shows yellow status. This will change
+  once another node is added and a replica can
+  be created.
+
+
+Create document
+  Place it inside the 'external' partition/type/category.
+  curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+    {
+      "name": "John Doe"
+    }'
+
+Retrieve document
+  curl -XGET 'localhost:9200/customer/external/1?pretty'
+  {
+    "_index" : "customer",
+    "_type" : "external",
+    "_id" : "1",
+    "_version" : 1,
+    "found" : true,
+    "_source" : {
+      "name" : "John Doe"
+    }
+  }
+  Interesting parts are 'found' and 'source - the original data'
+
+
+Delete index
+  curl -XDELETE 'localhost:9200/customer?pretty'
+  {
+    "acknowledged" : true
+  }
+
+
+Elastic REST pattern
+  curl -XPUT 'localhost:9200/customer'
+  curl -XPUT 'localhost:9200/customer/external/1' -d '
+  {
+    "name": "John Doe"
+  }'
+  curl 'localhost:9200/customer/external/1'
+  curl -XDELETE 'localhost:9200/customer'
+
+  curl -X<REST Verb> <Node>:<Port>/<Index>/<Type>/<ID>
+
+
+Overwrite a document
+  If specified, it's possible to overwrite (PUT) the document.
+  When not specified, elasticsearch will autogenerate the index.
+    curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+    {
+      "name": "Jane Doe"
+    }'
+
+
+Update a document
+  This will delete and the put the new document and index it.
+
+  curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+  {
+    "doc": { "name": "Jane Doe" }
+  }'
+
+
+Delete a document
+  curl -XDELETE 'localhost:9200/customer/external/1?pretty'
+  {
+    "found" : true,
+    "_index" : "customer",
+    "_type" : "external",
+    "_id" : "1",
+    "_version" : 7,
+    "_shards" : {
+      "total" : 2,
+      "successful" : 1,
+      "failed" : 0
+    }
+  }
+
+
+Scripting
+  https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html
+
+
+Bulk insert
+  curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
+    {"index":{"_id":"1"}}
+    {"name": "John Doe" }
+    {"index":{"_id":"2"}}
+    {"name": "Jane Doe" }
+    '
+  Insert (index) two document into customer/external
+
+
+Bulk mixed
+  curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
+    {"update":{"_id":"1"}}
+    {"doc": { "name": "John Doe becomes Jane Doe" } }
+    {"delete":{"_id":"2"}}
+    '
+  1) update the with id 1
+  2) delete document with id = 2
+
+  Sequential order. If any fails, it continues to next.
+
+
+Load from file
+  curl -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary "@elastic/accounts.json"
+
+
+Search API
+
+  All (query match_all)
+    Note, zero based indexes.
+    Default size is 10.
+
+    curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+    {
+      "query": { "match_all": {} },
+      "from": 10,
+      "size": 10,
+      "sort": { "balance": { "order": "desc" } }
+    }'
+
+    After this, no session or anything is kept open.
+    Full _source data is returned.
+
+  Specific fields
+    curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+    {
+      "query": { "match_all": {} },
+      "_source": ["account_number", "balance"]
+    }'
+
+  Match fields
+    "mill"
+    curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+    {
+      "query": { "match": { "address": "mill" } }
+    }'
+
+    "mill" or "lane"
+    curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+    {
+      "query": { "match": { "address": "mill lane" } }
+    }'
+    "mill lane" - note it's match_phrase, not match.
+    curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+    {
+      "query": { "match_phrase": { "address": "mill lane" } },
+    }'
+
+  Boolean queries
+
+  These queries support matching (must/should/must_not etc) as
+  well as filter (such as range)
+
+  The score is not affected by the filter parameters.
+  The score can be changed using boost
+    { "match_all": { "boost" : 1.2 }}
+    
+    Matches
+      must - and - (a && b)
+      should - or - (a || b)
+      must_not - (!a && !b)
+
+      Example:
+      curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+      {
+        "query": {
+          "bool": {
+            "must": [
+              { "match": { "age": "40" } }
+            ],
+            "must_not": [
+              { "match": { "state": "ID" } }
+            ],
+            "filter": {
+              "range": {
+                "balance": {
+                  "gte": 10400,
+                  "lte": 18400
+                }
+              }
+            }
+          }
+        }
+      }'
+
+
+
+
+
+      Will search all documents (1000 hits). But by setting size
+      to 0, none will be returned.
+
+      Instead the aggregation result will be returned.
+
+      The aggregation will group together based on 'age'.
+
+      curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+      {
+        "size": 0,
+        "aggs": {
+          "group_by_state": {
+            "terms": {
+              "field": "age"
+            }
+          }
+        }
+      }'
+
+      Calculate the average balance in each 'age group'.
+      Note that we have nested the average aggregation inside
+      the outer aggregation
+      curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+      {
+        "size": 0,
+        "aggs": {
+          "group_by_staaaaateee": {
+            "terms": {
+              "field": "age"
+            },
+            "aggs": {
+              "average_balanceeeee": {
+                "avg": {
+                  "field": "balance"
+                }
+              }
+            }
+          }
+        }
+      }'
+
+      Inside the grouping aggregation, add a sorting instruction.
+      Note, that inside a aggregation, the sort must be of a
+      aggregation term (it seems)
+      curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+      {
+        "size": 0,
+        "aggs": {
+          "group_by_peter": {
+            "terms": {
+              "field": "age",
+              "order": {
+                "average_balance": "desc"
+              }
+            },
+            "aggs": {
+              "average_balance": {
+                "avg": {
+                  "field": "balance"
+                }
+              }
+            }
+          }
+        }
+      }'
+
+
+      1) Create 3 groups (the range groups)
+      2) Inside each group, create female and male group.
+      3) Inside gender groups, calculate average salary.
+
+      curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+      {
+        "size": 0,
+        "aggs": {
+          "the_age_group": {
+            "range": {
+              "field": "age",
+              "ranges": [
+                {
+                  "from": 20,
+                  "to": 30
+                },
+                {
+                  "from": 30,
+                  "to": 40
+                },
+                {
+                  "from": 40,
+                  "to": 50
+                }
+              ]
+            },
+            "aggs": {
+              "female_or_male_group": {
+                "terms": {
+                  "field": "gender"
+                },
+                "aggs": {
+                  "average_salary": {
+                    "avg": {
+                      "field": "balance"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }'

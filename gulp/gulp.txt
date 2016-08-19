@@ -1,0 +1,213 @@
+
+gulp.task('one', function() {
+  console.log("one start");
+  return gulp.src([files.jsFiles])
+  .pipe(filelog("ONE"));
+  console.log("one finish");
+});
+
+gulp.task('two', ['one'], function() {
+  console.log("two start");
+  return gulp.src([files.jsFiles])
+  .pipe(filelog("TWO"));
+  console.log("two finish");
+});
+
+gulp.task('test', ['one', 'two'], function() {
+  console.log("test start");
+  gulp.src([files.jsFiles])
+  .pipe(filelog("TEST"));
+  console.log("test finish");
+});
+
+
+----------------------->
+
+[08:55:05] Starting 'one'...
+one start
+[08:55:05] [ONE] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:55:05] [ONE] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:55:05] [ONE] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:55:05] [ONE] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:55:05] [ONE] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:55:05] [ONE] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:55:05] [ONE] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:55:05] [ONE] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:55:05] [ONE] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:55:05] [ONE] Found [9] files.
+[08:55:05] Finished 'one' after 31 ms
+[08:55:05] Starting 'two'...
+two start
+[08:55:05] [TWO] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:55:05] [TWO] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:55:05] [TWO] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:55:05] [TWO] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:55:05] [TWO] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:55:05] [TWO] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:55:05] [TWO] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:55:05] [TWO] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:55:05] [TWO] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:55:05] [TWO] Found [9] files.
+[08:55:05] Finished 'two' after 7.91 ms
+[08:55:05] Starting 'test'...
+test start
+[08:55:05] [TEST] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:55:05] [TEST] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:55:05] [TEST] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:55:05] [TEST] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:55:05] [TEST] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:55:05] [TEST] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:55:05] [TEST] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:55:05] [TEST] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:55:05] [TEST] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:55:05] [TEST] Found [9] files.
+[08:55:05] Finished 'test' after 11 ms
+
+
+
+
+
+
+gulp.task('one', function() {
+  console.log("one start");
+  return gulp.src([files.jsFiles])
+  .pipe(filelog("ONE"));
+  console.log("one finish");
+});
+
+gulp.task('two', function() {
+  console.log("two start");
+  return gulp.src([files.jsFiles])
+  .pipe(filelog("TWO"));
+  console.log("two finish");
+});
+
+gulp.task('test', ['one', 'two'], function() {
+  console.log("test start");
+  return gulp.src([files.jsFiles])
+  .pipe(filelog("TEST"));
+  console.log("test finish");
+});
+
+---------------------->
+
+[08:56:47] Starting 'one'...
+one start
+[08:56:47] Starting 'two'...
+two start
+[08:56:47] [ONE] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:56:47] [TWO] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:56:47] [ONE] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:56:47] [TWO] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:56:47] [TWO] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:56:47] [ONE] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:56:47] [TWO] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:56:47] [ONE] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:56:47] [TWO] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:56:47] [ONE] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:56:47] [TWO] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:56:47] [ONE] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:56:47] [TWO] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:56:47] [ONE] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:56:47] [TWO] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:56:47] [ONE] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:56:47] [TWO] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:56:47] [TWO] Found [9] files.
+[08:56:47] Finished 'two' after 27 ms
+[08:56:47] [ONE] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:56:47] [ONE] Found [9] files.
+[08:56:47] Finished 'one' after 39 ms
+[08:56:47] Starting 'test'...
+test start
+[08:56:47] [TEST] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:56:47] [TEST] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:56:47] [TEST] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:56:47] [TEST] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:56:47] [TEST] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:56:47] [TEST] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:56:47] [TEST] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:56:47] [TEST] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:56:47] [TEST] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:56:47] [TEST] Found [9] files.
+[08:56:47] Finished 'test' after 16 ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gulp.task('one', function() {
+  console.log("one start");
+  gulp.src([files.jsFiles])
+  .pipe(filelog("ONE"));
+  console.log("one finish");
+});
+
+gulp.task('two', function() {
+  console.log("two start");
+  gulp.src([files.jsFiles])
+  .pipe(filelog("TWO"));
+  console.log("two finish");
+});
+
+gulp.task('test', ['one', 'two'], function() {
+  console.log("test start");
+  gulp.src([files.jsFiles])
+  .pipe(filelog("TEST"));
+  console.log("test finish");
+});
+
+
+--------------------------->
+
+
+[08:57:46] Starting 'one'...
+one start
+one finish
+[08:57:46] Finished 'one' after 9.35 ms
+[08:57:46] Starting 'two'...
+two start
+two finish
+[08:57:46] Finished 'two' after 2.3 ms
+[08:57:46] Starting 'test'...
+test start
+test finish
+[08:57:46] Finished 'test' after 876 μs
+[08:57:46] [ONE] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:57:46] [TWO] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:57:46] [TEST] [1] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/bar.js]
+[08:57:46] [ONE] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:57:46] [TWO] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:57:46] [TEST] [2] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/es6test.js]
+[08:57:46] [ONE] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:57:46] [TWO] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:57:46] [TEST] [3] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/foo.js]
+[08:57:46] [TWO] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:57:46] [TEST] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:57:46] [ONE] [4] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/knockouttest.js]
+[08:57:46] [TEST] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:57:46] [TWO] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:57:46] [ONE] [5] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/main.js]
+[08:57:46] [TEST] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:57:46] [TWO] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:57:46] [ONE] [6] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/mainViewModel.js]
+[08:57:46] [TEST] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:57:46] [TWO] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:57:46] [ONE] [7] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/requiretest.js]
+[08:57:46] [TEST] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:57:46] [TWO] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:57:46] [ONE] [8] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/router.js]
+[08:57:46] [TEST] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:57:46] [TEST] Found [9] files.
+[08:57:46] [TWO] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:57:46] [TWO] Found [9] files.
+[08:57:46] [ONE] [9] [/home/CORPUSERS/23060355/src/gulp-requirejs-knock/src/js/components/like-widget.js]
+[08:57:46] [ONE] Found [9] files.
