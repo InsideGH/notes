@@ -31,7 +31,7 @@ INTRO
       }
     *Core Data
     * tableView.reloadData()
-    
+
 
   UIKIT
     Has template (text, images, buttons...)
@@ -52,6 +52,7 @@ INTRO
   Storyboard
     layout screens as scenes (can create new scenes - by dragging a "xxx" view controller)
     connect scenes flow between different screens.
+    remove view controller and view controller swift file.
 
   Scene
     has view controller (manages one main view).
