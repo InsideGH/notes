@@ -1,0 +1,116 @@
+Elixir
+
+create 2012
+  functional - no obj/classes
+  dynamic - type checked at runtime (no need to declare data types)
+  compiled - byte code on erland vm (beam) - stable!
+  last expression is the return value
+  pure functions
+    return only from args
+    no side effects
+
+general purpose but best
+  data processing, consuming, computing and transforming
+  networking, webservers
+  high avail system, must always be avail, despite crashes.
+
+3 important areas
+  functions
+  pipe
+  pattern matching
+
+functions
+  f(x)
+  g(f(x), y)
+
+Define a module (and function)
+  defmodule Account do
+    def balance(initial, spending) do
+      initial - spending
+    end
+  end
+
+current_balance = Account.balance(1000, 200)
+IO.puts "Current balance: US $#{current_balance}"
+
+Pure vs OO
+  Info hidden vs function receives all data necessary to calc
+
+Pipe
+  To solve the issue of having many nested function calls
+  Pipe is like javascripts async series
+  Pipe is a bit similar to RX streams, but streams do not have function
+  arguments in the same sence.
+  |>
+  The above is the elixir pipe. The right side takes the result as the first arg
+
+  defmodule Account do
+    def balance(initial, spending) do
+      discount(initial, 10)
+      |> interest(0.1)
+      |> format($)
+    end
+  end
+
+  defmodule Account do
+    def print_sum do
+      1..10
+      |> Enum.sum
+      |> IO.puts
+    end
+  end
+
+  Ex1
+    IO.puts String.upcase("Elixir") -> "Elixir" |> String.upcase |> IO.puts
+  Ex2
+    format(String.split(full_name)) ->  full_name |> String.split |> format
+
+  Pattern matching
+    To remove if statements
+
+    JS
+      let first_name = "Jose ";
+      let last_name = "Valim";
+      let full_name = first_name + last_name;
+      console.log(full_name);
+
+    Elixir
+      "Jose " <> last_name = "Jose Valim"
+      "Jose " <> last_name = "Valim"
+
+    JS
+      a=[1,2,3,4]
+      [peter, nisse, pelle, jax, knuda] = a
+
+    Elixir
+      data = ["elixir", "valim"]
+      [lang, author] = data
+
+    Elixir
+      Traditional
+        defmodule Account do
+          def run_transaction(balance, amount, type) do
+  //          if type == :deposit do
+  //          else
+  //          end
+          end
+        end
+        Account.run_transaction(1000, 50, :deposit)
+        Account.run_transaction(1000, 50, :withdrawal)
+
+      instead, write two functions. Pattern matching in function arguments
+      makes this possible.
+
+        defmodule Account do
+          def run_transaction(balance, amount, :deposit) do
+          end
+          def run_transaction(balance, amount, :withdrawal) do
+          end
+        end
+        Account.run_transaction(1000, 50, :deposit)
+        Account.run_transaction(1000, 50, :withdrawal)
+
+      instead, use pipe (similiar to RX streams, starting with 1000, +50, -30)
+        1000
+        |> Account.run_transaction(50, :deposit)
+        |> Account.run_transaction(30, :withdrawal)

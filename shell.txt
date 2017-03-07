@@ -1,0 +1,7 @@
+find . -iname "*.txt*" -exec grep router {} \;
+find . -iname "*.txt*" -exec grep --with-filename router {} \;
+find . -type f -print -exec cat {} \; | less
+
+export LESS='-iP%f (%1/%m) Line %lt/%L'
+
+ack (ack-grep)
