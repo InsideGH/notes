@@ -1,4 +1,5 @@
 Elixir
+Search for "not possible in javascript"
 
 create 2012
   functional - no obj/classes
@@ -114,3 +115,122 @@ Pipe
         1000
         |> Account.run_transaction(50, :deposit)
         |> Account.run_transaction(30, :withdrawal)
+
+  Functions first class citizens
+    Can be assigned to variables
+    Passed to arguments
+
+    Anonymous (no name or module)
+      max_balance = fn(amount) -> "Max #{amount}" end
+      max_balance.(500)
+      ---
+      deposit = fn(balance, amount) -> balance + amount end
+      withdraw = fn(balance, amount) -> balance - amount end
+
+      run_transaction(100,20, deposit);
+      run_transaction(100,20, withdraw);
+      ---
+      multiple clauses (just as with named functions)
+        account_transaction = fn
+                              (balance, amount, :deposit) -> balance + amount
+                              (balance, amount, :withdraw) -> balance - amount
+                              end
+        account_transaction.(100, 20, :deposit)
+        account_transaction.(100, 20, :withdraw)
+      ---
+      short hand syntax (anonymous functions that adds two arguments passed to it)
+        deposit = &(&1 + &2)
+
+        account_transaction.(100, 20, &(&1 + &2))
+
+        javascript : [1,2,3,4].map(value => value * 2)
+        elixir : Enum.map([1,2,3,4], &(&1 * 2))
+
+
+  Examples
+    deposit = fn(balance, amount) -> balance + amount end
+    withdrawal = fn(balance, amount) -> balance - amount end
+
+    ---
+
+    defmodule Account do
+      def run_transaction(balance, amount, transaction ) do
+        if amount > 10000 do
+          "Cannot perform transaction"
+        else
+          transaction.(balance, amount)
+         end
+      end
+    end
+
+    ---
+
+    perform_operation = fn
+      (values, :addition ) -> Enum.reduce(values, &(&1 + &2))
+      (values, :multiplication ) -> Enum.reduce(values, &(&1 * &2))
+    end
+
+    IO.puts perform_operation.([1, 2, 3, 4], :addition)
+    IO.puts perform_operation.([1, 2, 3, 4], :multiplication)
+
+    ---
+
+  Splitting lists
+
+    javascript:
+    [a,b,...c] = [1,2,3,4]
+      a = 1
+      b = 2
+      c = [3, 4]
+
+    elixir
+      [head | tail] = [1,2,3,4]
+      head = 1
+      tail = 2,3,4
+      or to ignore tail
+        [head | _ ] = [1,2,3,4]
+
+    javascript
+      foo = ([a,...b]) => {console.log(a,b);}
+
+    elixir
+      defmodule Language do
+        def foo(head | tail) do
+          IO.puts "head #{head}"
+          IO.puts "tail #{tail}"
+        end
+      end
+
+    NO FOR LOOPS IN ELIXIR! USE RECURSION INSTEAD
+      defmodule Language do
+        def print_list([head | tail]) do    <----------------recursive case
+          IO.puts "head: #{head}"
+          print_list(tail)
+        end
+
+        def print_list([]) do     <-----------------BASE CASE
+        end
+      end
+
+      javascript :
+      function bar([a, ...rest]) {
+        console.log(a);
+        if (rest.length > 0)
+          bar(rest);
+      }
+
+    tuples (first element is often a atom)
+      {:ok, "elixir", 2012}
+
+      {status, result} = File.read("something that exists")
+      {:ok, result} = File.read("something that exists")
+      {:ok, result} = File.read("bogus") // will throw error.
+
+      Not possible in javascript -------------------->
+        defmodule Account do
+          def parse_file({:ok, content}) do
+          end
+          def parse_file({:error, _ }) do
+          end
+        end
+        File.read("transaction.csv") |> Account.parse_file()
