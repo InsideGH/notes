@@ -1,0 +1,2 @@
+git branch -f develop origin/develop
+git checkout develop
