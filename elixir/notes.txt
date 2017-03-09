@@ -220,7 +220,10 @@ Pipe
       }
 
     tuples (first element is often a atom)
+      Like javascript object.
+
       {:ok, "elixir", 2012}
+      elem(tuple, 1) i "elixir"
 
       {status, result} = File.read("something that exists")
       {:ok, result} = File.read("something that exists")
@@ -234,3 +237,100 @@ Pipe
           end
         end
         File.read("transaction.csv") |> Account.parse_file()
+
+      Passing options with keyword lists
+        When passing optional values to functions
+        Account.balance(currency: "dollar", symbol: "$") is same as
+        Account.balance([{currency: "dollar"}, {symbol: "$"}])
+
+        def balance(options \\ []) do
+          options[:currency] || "dollar"
+        end
+
+        in javascript ->
+          balance({currency: "dollar". symbol: "$"});
+          balance(options = {currency: "dollar"})
+          {
+            options.currency
+            options["currency"]
+          }
+      Ecto library (javascript sequalize) uses keyword lists
+        Repo.all( from u in User,
+               where: u.age > 21,
+               where: u.is_active == true)
+
+        javascript Sequalize
+          Repo.findAll({
+            where: {
+            authorId: { $gt: 21 },
+            status: true
+            }
+          });
+
+    Map
+      Used for key value storage
+
+      person = %{"name" => "Brooke", "age" => 42}
+      myTuple = Map.fetch(person, "name")   {:ok, "Brooke"}
+      myName = Map.fetch!(person, "name")
+      myName = Map.fetch!(person, "banan") This will lead to exception...
+
+      javascript
+        const person = new Map();
+        person.set("name", "Brooke")
+        person.set("age"", 42)
+
+        let myName = person.get("name")
+        let myName = person.get("banana") This will lead to undefined
+
+        Using ordinary object
+          {name, age} = {name:"peter", age: "12"}
+        or pure empty obj
+          var obj = Object.create(null);
+          obj.name = "peter";
+          obj.age = 12;
+          var {name, age} = obj
+
+      Ex
+        person = %{ "name" => "Sam", "age" => 31 }
+        %{"age" => age}  = person
+        IO.puts "Age is #{age}"
+
+      Ex
+        person = %{ "name" => "Sam", "age" => 31,
+          "bank_info" => %{ "routing" => "001002", "account" => "123123" }
+          }
+        %{"bank_info" => %{"account" => account}}  = person
+        IO.puts "Bank Account is #{account}"
+
+        javscript ->
+        {bank_info: {account: a}} = obj
+
+    Case
+      {result, error} = File.read(filename)
+
+      case result do
+        :ok -> "Content: #{content}"             return value
+        :error -> "Error: #{content}"            return value
+      end
+
+      not possible in javascript
+        case File.read(filename) do
+          {:ok, content} -> "Content: #{content}"             return value
+          {:error, type} -> "Error: #{content}"            return value
+        end
+
+      with guard clauses, not possible in javascript
+        case File.read(filename) do
+          {:ok, content} -> "Content: #{content}"
+            when byte_size(content) > 10 -> "Content: ..."
+          {:ok, content} -> "Content: #{content}"
+          {:error, type} -> "Error: #{content}"
+        end
+
+      ex
+        case Account.transfer_amount(from, to, amount) do
+          {:ok, value} when value > 1000 -> IO.puts "Amount transferred."
+          {:ok, value} -> IO.puts "Transferred: $#{value}"
+          {:error, message} -> IO.puts "Error: #{message}"
+        end
