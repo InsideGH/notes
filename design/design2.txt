@@ -1,0 +1,99 @@
+--------------------------------------------------------------------------------
+
+Personas
+  Required info
+    What to be able to do on a website
+
+  Where to start?
+    Educated assumptions
+    Focus group
+    Interview current users
+
+    or ->
+      If new product - create -----assumption persona------.
+        1) Pull quote and image - "i only have a minute"
+        2) Name, title, Marital status (understand lifestyle)
+        3) Goals
+        4) Concerns - "save articles for later, read on ipad etc"
+
+    other
+      2-4 personas per project
+      creates a shared understanding of who the user is
+      help you empathize with the user.
+
+--------------------------------------------------------------------------------
+
+User Centered Design (UCD)
+Step 1, identify primary feature
+Step 2, understand why personas need the feature
+Step 3, research how others solved it
+Step 4, sketch/wireframe
+Step 5, design
+
+Step 1
+  Where the match is best in all personas -> primary feature
+
+  Question? Is this matching the initial "Required info"?
+
+  If yes, found primary feature.
+
+Step 2
+
+Step 3
+  Large search field,
+  Keywords associated with my current seach (engagement)
+  Filter search
+  Search result in cards
+
+Step 4
+  a) Sketch on paper
+  b) wireframe (omnigraffle, Sketch, Balsamiq) - test on users
+     Always with real content (not ipsum)
+  c) test multiple wireframes on users (5-7 users)
+     5 second test (impressions)
+     1) What does this feature do?
+     2) What do you like about it?
+     3) What don't you like about it?
+
+--------------------------------------------------------------------------------
+
+Information architecture
+  Label and organize content to make it easier to find.
+  road signs, subway maps etc
+  Helps users to know where they are and where to go.
+
+  The four ways of searching
+  1) we know what we want
+  2) Explortory (know it, but not where)
+  3) Unknown - don't know what we search for, and where
+  4) Re-finding
+
+  1) Search, index, quicklinks
+  2) Search, navigation
+  3) simple language, personal communication
+  4) history
+
+  A)
+    Put all pages on cards
+    Sort in piles (using real users)
+    Then sort piles of significance (top is navigation name)
+
+  B)
+    Build site map
+        Homepage
+    |              |
+    Articles      About
+
+  C)
+    Persistent navigation, search and logo to get back to homepage.
+    Maybe a utility navigation (smaller, max 3-4 items)
+
+  D)
+    Secondary navigation goes into each primary page on the
+    left side.
+
+  E)
+    Make it easier to know where you are with active states.
+    Always show the page title on the page.
+
+--------------------------------------------------------------------------------

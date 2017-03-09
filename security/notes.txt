@@ -1,0 +1,24 @@
+security of things
+
+docker security
+IoT botnet - DDOS
+drone attack on smart lightbulbs
+baby monitor hack
+sql injection in wemo devices
+cross platform applications with javascript does have security issues
+iKettle wifi hack - got hold of the wifi password
+CloudPets - userdata / voice recordings leaked. Unathorized mongo.
+check out internet of shit
+shodan webpage
+censys
+docker namespace
+docker prviliges, default unpriviligded (do not run --priviliged)
+docker capabilities --cap-drop
+docker content trust DOCKER_CONTENT_TRUST env varible to 1
+do not use --net=host
+
+docker cloud - enble security scans (still free?)
+owasp checklist
+owsp
+
+

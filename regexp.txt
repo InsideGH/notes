@@ -168,6 +168,11 @@ Matching a specific amount
 [a-z]{20,} matches a minimum of 20
 
 
+Match lines that have continous characters of 20 or more
+l | egrep "[a-zA-Z0-9s]{20,}"
+
+Same, and remove folders.
+ls | egrep '[a-zA-z0-9]{20,}$' | xargs -I %s rm -rf %s
 
 Matching words that do not contain any wovels
 "The rougher the seas, the smthr we sail".match(/\b[^aeiouy\s]+\b/g)
