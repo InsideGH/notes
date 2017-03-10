@@ -97,3 +97,13 @@ Information architecture
     Always show the page title on the page.
 
 --------------------------------------------------------------------------------
+
+Mobile
+  Responsive to any device
+  Mobile app should be consistent with app (user will know how to use the product)
+  Even if the structure is different and looks difference between devices, the content
+  should be continuous. That is, for example if article is read on mobile, it should
+  be on read items on webapp.
+
+  Design for the context, not the device!
+  
