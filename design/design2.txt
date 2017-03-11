@@ -41,7 +41,7 @@ Step 2
 
 Step 3
   Large search field,
-  Keywords associated with my current seach (engagement)
+  Keywords associated with my current search (engagement)
   Filter search
   Search result in cards
 
@@ -64,7 +64,7 @@ Information architecture
 
   The four ways of searching
   1) we know what we want
-  2) Explortory (know it, but not where)
+  2) Exploratory (know it, but not where)
   3) Unknown - don't know what we search for, and where
   4) Re-finding
 
@@ -97,3 +97,105 @@ Information architecture
     Always show the page title on the page.
 
 --------------------------------------------------------------------------------
+
+Navigation
+  With the primary navigation in place.
+
+  Descriptor navigation
+    For example separate content into topics (smashingmagazine, spotify (mood, party, etc))
+
+  Dashboard navigation, verb based (action!). Usually on financial sites (invest, trading, etc)
+
+  User based navigation. Common on pricing pages (litmus page)
+
+  50%/50% between search and persistent navigation.
+
+  Google page view percentage. More than half don't scroll. Only 42% sees 2nd page.
+
+  Sorting
+    To provide more search result to user, use sorting (recent, popular, most commented)
+    Does not remove anything, just sorted.
+
+  Filter
+    Removes irrelevant.
+
+  Tagging, possibility for users to set tags.
+
+  Meta tagging, common on commercial sites. Filter on color, brand, etc.
+
+  Pagination when having large results.
+
+  Tabs
+
+  Summary
+    Top navigation helps to find stuff
+    Descriptor navigation helps with page discovery
+
+  Top/Down
+    Navigation
+    Tagline
+    Welcome message
+    Call to action
+
+--------------------------------------------------------------------------------
+
+Form
+  Start by sketching what we need in the form
+  Do not create a zigzag form (eye moving right to left)
+    Move the labels on top of input
+  Remove unnecessary fields
+  Making required fields, makes user skip optional.
+  Making fields optional, is better.
+  Error handling should be clear and never blame user.
+  Research shows that default choice is kept. Decision is made for them. Called
+  explicit choice.
+  Make buttons large, so that younger and older can hit them easier.
+  Use clear button text.
+  Always use the hand cursor when hover over link.
+
+  Confirmation message, only use when user is doing something irreversible. Or
+  something that is hard to understand if accidentally done (skype mute ex)
+
+  Upon submission, congratulate them. This is a mini-win.
+
+  Accessibility
+    Never put text in images (screen readers can't read it)
+    Avoid low contrast.
+    Keep logical order of fields.
+    Test with Wave (wave.webaim.org)
+    Test with chrome color contrast
+
+--------------------------------------------------------------------------------
+
+Homepage
+  Quickly answer
+  * What is this?
+  * What do they have here?
+  * What can I do here?
+  * Why should I be here?
+  * Where do I start?
+
+  Search first and cathegory search
+  Tagline (https://www.sketchapp.com/). Describe the product.
+  Mottos explain bigger companies ethics. (www.ford.com). Not to use if new site.
+  Use "welcome statement" to describe in more detail what the product is about. Place
+  for example under tagline.
+
+  Signup required? Then make it prominent on the page. Also explain why you should
+  signup. For example to be part of conversation.
+
+  Time sensitive information to let user know that site is active.
+    The latest news
+    Show date and timestamp
+    Top story
+
+  Discover new content
+    Sign up for news letter.
+    Clearly say what you get. "Top 5 stories a week"
+
+  Steve Krug - the first few seconds spent on webpage are critical.
+
+--------------------------------------------------------------------------------
+
+Pricing pages
+  
