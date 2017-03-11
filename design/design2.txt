@@ -24,36 +24,36 @@ Personas
 --------------------------------------------------------------------------------
 
 User Centered Design (UCD)
-Step 1, identify primary feature
-Step 2, understand why personas need the feature
-Step 3, research how others solved it
-Step 4, sketch/wireframe
-Step 5, design
+  Step 1, identify primary feature
+  Step 2, understand why personas need the feature
+  Step 3, research how others solved it
+  Step 4, sketch/wireframe
+  Step 5, design
 
-Step 1
-  Where the match is best in all personas -> primary feature
+  Step 1
+    Where the match is best in all personas -> primary feature
 
-  Question? Is this matching the initial "Required info"?
+    Question? Is this matching the initial "Required info"?
 
-  If yes, found primary feature.
+    If yes, found primary feature.
 
-Step 2
+  Step 2
 
-Step 3
-  Large search field,
-  Keywords associated with my current search (engagement)
-  Filter search
-  Search result in cards
+  Step 3
+    Large search field,
+    Keywords associated with my current search (engagement)
+    Filter search
+    Search result in cards
 
-Step 4
-  a) Sketch on paper
-  b) wireframe (omnigraffle, Sketch, Balsamiq) - test on users
-     Always with real content (not ipsum)
-  c) test multiple wireframes on users (5-7 users)
-     5 second test (impressions)
-     1) What does this feature do?
-     2) What do you like about it?
-     3) What don't you like about it?
+  Step 4
+    a) Sketch on paper
+    b) wireframe (omnigraffle, Sketch, Balsamiq) - test on users
+       Always with real content (not ipsum)
+    c) test multiple wireframes on users (5-7 users)
+       5 second test (impressions)
+       1) What does this feature do?
+       2) What do you like about it?
+       3) What don't you like about it?
 
 --------------------------------------------------------------------------------
 
@@ -198,4 +198,74 @@ Homepage
 --------------------------------------------------------------------------------
 
 Pricing pages
-  
+  Clearly state what included in price
+  Offer recommendations can influence decision. (most popular options)
+  Appeal to Intrinsic motivations (buy one and someone else how needs get one)
+  Use testimonials (quotes from other users) to help during purchase. (reframe message)
+  indiegogo.com
+    Number of backers (SOCIAL PROOF)
+    Time left (SCARCITY)
+
+  Once user made choice, make it as easy as possible to follow through.
+    Break into parts
+
+  Trigger actions at right moment, when the user is motivated and able to take the action.
+
+  Paradox of choice
+    Too many options
+    Users read 20% of words on a site.
+
+  Use progressive disclosure
+    Reduce page details, only show whats needed to make decision.
+
+--------------------------------------------------------------------------------
+
+Mobile
+  Responsive to any device
+
+  Mobile app should be consistent with app (user will know how to use the product)
+
+  Even if the structure is different and looks difference between devices, the content
+  should be continuous. That is, for example if article is read on mobile, it should
+  be on read items on webapp.
+
+  Design for the context, not the device!
+
+  Who, What, When and Where = Context
+
+  Only three icons are globally recognizable. House/Home, Magnifying glass/Search
+  and printer/print.
+
+  External triggers, used to engage users (facebook, twitter, etc). These
+  exist in the "USERS ENVIRONMENT".
+
+  Internal triggers, seeing an internal user/friend increases engagement.
+
+  Triggers, achievements are great way to make user feel great.
+
+  Good triggers prompt action!
+
+  Notifications create intrigue
+    It plays into our basic curiosity
+    Ex. The most commented article
+
+  Onboarding/Signup as easy as possible
+
+  Short tutorial about the most important actions. More advanced features explained
+  later when use is more familiar with the app. Use a big bold button to guide through.
+
+  Once in the app, show user something to be able to follow. This helps to
+  personalize the content to the users interest.
+
+  Test everything on real users.
+
+--------------------------------------------------------------------------------
+
+  Resources
+    Don't make me think - book
+    Lean ux - book - how to apply ux in agile way
+    Sprint solve big problems and test in five days - book - google
+
+    www.usability.gov
+    https://www.nngroup.com/articles/
+    http://www.uxbooth.com/
