@@ -1,0 +1,27 @@
+Plugins->
+
+Debugger for Chrome
+Docker
+ESLint
+GitLens
+Material Icon Theme
+Path autocomplete
+Power mode
+Prettier
+vscode-styled-components
+
+user settings ->
+{
+    "diffEditor.ignoreTrimWhitespace": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "diffEditor.renderSideBySide": false,
+    "editor.renderLineHighlight": "all",
+    "editor.renderWhitespace": "all",
+    "powermode.enabled": true,
+    "powermode.enableShake": false,
+    "powermode.backgroundMode": "image",
+    "powermode.explosionSize": 15,
+    "powermode.presets": "flames",
+    "window.zoomLevel": 0,
+    "editor.tabSize": 2,
+}
