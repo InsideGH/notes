@@ -1,0 +1,91 @@
+Linux
+
+// Split into 10 files
+split -l$((`wc -l < 2018-02-28_Friskisblescanner-out-0.log`/10)) 2018-02-28_Friskisblescanner-out-0.log split.log -da 4
+
+
+
+// Filter out macs to separate files
+tac split.log0009 | grep "C3:6E:D1:8F:17:FC" > 17_FC
+tac split.log0009 | grep "E9:26:4D:FC:D9:39" > D9_39
+
+
+
+// Process the file to only show type, date, count
+grep ^"CG DEVICE" D9_39 |
+gawk -F',' '
+BEGIN{print "-----START"}
+{
+split($15, _time, ":");
+split($16, _type, ":");
+split(_type[2], _type2, "\"");
+split($2, _count, ":")
+_date=strftime("%c", ( _time[2] + 500 ) / 1000 );
+print _date "\t" _type2[2] "\t" _count[2];
+}
+END{print "-----END"}
+' > Result_d939.txt
+
+
+
+// Process the file to only show type, date, count
+grep ^"CG DEVICE" 17_FC |
+gawk -F',' '
+BEGIN{print "-----START"}
+{
+split($15, _time, ":");
+split($16, _type, ":");
+split(_type[2], _type2, "\"");
+split($2, _count, ":")
+_date=strftime("%c", ( _time[2] + 500 ) / 1000 );
+print _date "\t" _type2[2] "\t" _count[2];
+}
+END{print "-----END"}
+' > Result_17fc.txt
+
+
+---------------------
+
+
+Mongo/Mongoose
+
+db.workouts.find({owner: ObjectId("5b83d4b624eec7000bcb4eb9"), startedAt: {$gte: new ISODate("2018-08-25T00:00:00Z")}}).pretty()
+
+** Permissions
+db.accounts.update({_id: ObjectId("5b68251ff8c2b100091240af")}, { $push: { permissions: {role: "admin", site: ObjectId("5b040bff079f21005167f137"), updatedAt: new ISODate(), createdAt: new ISODate(), _id: new ObjectId()} } })
+db.accounts.update({_id: ObjectId("5b68251ff8c2b100091240af")}, { $push: { permissions: {role: "coach", site: ObjectId("5b040bff079f21005167f137"), updatedAt: new ISODate(), createdAt: new ISODate(), _id: new ObjectId()} } })
+db.accounts.update({_id: ObjectId("5b68251ff8c2b100091240af")}, {$push: {permissions: {_id: ObjectId(), role: "su"}}})
+db.accounts.update({_id: ObjectId("5b68251ff8c2b100091240af")}, {$set: {roles: ["user", "su"]}})
+
+Sharing
+db.shareroutines.find({_id: ObjectId("5b73e3466c1f2e000b2a5ad1")}).pretty()
+db.shareroutines.update({_id: ObjectId("5b73e3466c1f2e000b2a5ad1")}, {$set: {shareResult: true}})
+
+
+-----------------------
+** S3 public
+{
+   "Version": "2012-10-17",
+   "Statement": [
+       {
+           "Sid": "PublicReadGetObject",
+           "Effect": "Allow",
+           "Principal": "*",
+           "Action": "s3:GetObject",
+           "Resource": "arn:aws:s3:::cg-user-fileuploads/*"
+       }
+   ]
+}
+
+
+------------------------
+SSL
+openssl req -new -newkey rsa:2048 -nodes -out flycam.incubation.io.csr -keyout flycam.incubation.io.key
+openssl req -in flycam.incubation.io.csr -noout -text
+
+
+
+--------------------------
+#!/bin/bash
+git branch -f develop origin/develop
+git checkout develop
